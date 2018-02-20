@@ -46,7 +46,7 @@ public class JsonUtil {
      * is thrown during deserialization, {@code null} is also returned.
      *
      * @param token The token type to use for deserialization.
-     * @param file  - The file to read the JSON from.
+     * @param file  The file to read the JSON from.
      * @param <T>   The object type to give back.
      * @return a {@link T} that was read from the given file, {@code null} if the file does not exist, or {@code null} if
      * an exception was thrown.
@@ -56,14 +56,10 @@ public class JsonUtil {
         if (!file.exists())
             return null;
 
-        FileReader reader = null;
-        try {
-            reader = new FileReader(file);
+        try (FileReader reader = new FileReader(file)) {
             return GSON.fromJson(reader, token.getType());
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(reader);
         }
 
         return null;
@@ -93,14 +89,10 @@ public class JsonUtil {
             }
         }
 
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(file);
+        try (FileWriter writer = new FileWriter(file)) {
             writer.write(getJson(type, token));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(writer);
         }
     }
 
