@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "gourmet_utensil",
+  "pattern": [
+    "PI",
+    " S"
+  ],
+  "key": {
+    "P": {
+      "item": "#PLANKS"
+    },
+    "I": {
+      "item": "#IRONINGOT"
+    },
+    "S": {
+      "item": "#STICKS"
+    }
+  },
+  "result": {
+    "item": "gourmet:cutting_board"
+  }
+}

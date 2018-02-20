@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "age=0,tasty=false": { "model": "gourmet:bush/bush_age_0" },
+    "age=0,tasty=true":  { "model": "gourmet:bush/bush_age_0" },
+    "age=1,tasty=false": { "model": "gourmet:bush/bush_age_1" },
+    "age=1,tasty=true":  { "model": "gourmet:bush/bush_age_1" },
+    "age=2,tasty=false": { "model": "gourmet:bush/bush_age_2" },
+    "age=2,tasty=true":  { "model": "gourmet:bush/bush_age_2" },
+    "age=3,tasty=false": { "model": "gourmet:bush/bush_age_3" },
+    "age=3,tasty=true":  { "model": "gourmet:bush/bush_blueberry" }
+  }
+}

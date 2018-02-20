@@ -1,0 +1,15 @@
+[
+  {
+    "modid": "gourmet",
+    "name": "Gourmet",
+    "description": "A modern take on an old concept.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "http://tehnut.info/",
+    "updateUrl": "http://tehnut.info/jenkins/",
+    "authorList": [ "TehNut" ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [ ]
+  }
+]
