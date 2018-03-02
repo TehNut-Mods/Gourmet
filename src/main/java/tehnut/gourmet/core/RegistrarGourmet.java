@@ -124,7 +124,7 @@ public class RegistrarGourmet {
             ModelLoader.setCustomModelResourceLocation(seed, 0, new ModelResourceLocation(ResourceUtil.addContext(seed.getRegistryName(), "seed/"), "inventory"));
 
         for (BlockBerryBush bush : BERRY_BUSHES.values())
-            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(bush), 0, new ModelResourceLocation(bush.getRegistryName(), "age=3,tasty=true"));
+            ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(bush), 0, new ModelResourceLocation(bush.getRegistryName(), "age=4"));
 
         ModelLoader.setCustomModelResourceLocation(CUTTING_BOARD, 0, new ModelResourceLocation(ResourceUtil.addContext(CUTTING_BOARD.getRegistryName(), "utensil/"), "inventory"));
         ModelLoader.setCustomModelResourceLocation(EMPTY_JAR, 0, new ModelResourceLocation(ResourceUtil.addContext(EMPTY_JAR.getRegistryName(), "utensil/"), "inventory"));

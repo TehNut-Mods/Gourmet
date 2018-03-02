@@ -1,5 +1,5 @@
 {
-    "parent": "gourmet:block/bush/bush_age_3_tasty",
+    "parent": "gourmet:block/bush/bush_tasty",
 	"textures": {
 		"berry": "gourmet:blocks/bush/bush_blueberry"
 	}

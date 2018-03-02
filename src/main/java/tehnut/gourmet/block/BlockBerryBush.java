@@ -30,8 +30,7 @@ import java.util.Random;
 
 public class BlockBerryBush extends BlockBush implements IHarvestContainer {
 
-    public static final IProperty<Integer> AGE = PropertyInteger.create("age", 0, 3);
-    public static final IProperty<Boolean> TASTY = PropertyBool.create("tasty");
+    public static final IProperty<Integer> AGE = PropertyInteger.create("age", 0, 4);
     private static final AxisAlignedBB AGE_0_AABB = new AxisAlignedBB(0.3125D, 0, 0.3125D, 0.6875D, 0.375D, 0.6875D);
     private static final AxisAlignedBB AGE_1_AABB = new AxisAlignedBB(0.25D, 0, 0.25D, 0.75D, 0.5D, 0.75D);
     private static final AxisAlignedBB AGE_2_AABB = new AxisAlignedBB(0.125D, 0, 0.125D, 0.875D, 0.8125D, 0.875D);
@@ -44,22 +43,22 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
 
         setCreativeTab(Gourmet.TAB_GOURMET);
         setUnlocalizedName(Gourmet.MODID + ".bush_" + harvest.getSimpleName());
-        setDefaultState(getBlockState().getBaseState().withProperty(AGE, 0).withProperty(TASTY, false));
+        setDefaultState(getBlockState().getBaseState().withProperty(AGE, 0));
         setSoundType(SoundType.PLANT);
     }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (state.getValue(TASTY) && !world.isRemote) {
+        if (isTasty(state) && !world.isRemote) {
             if (berryItem == null)
                 berryItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(Gourmet.MODID, "food_" + harvest.getSimpleName()));
 
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(berryItem, Math.max(1, world.rand.nextInt(4))));
-            world.setBlockState(pos, state.withProperty(TASTY, false));
+            world.setBlockState(pos, state.withProperty(AGE, 3));
             return true;
         }
 
-        return state.getValue(TASTY) || super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+        return isTasty(state) || super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
     }
 
     @Override
@@ -70,14 +69,11 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         super.updateTick(world, pos, state, rand);
-        if (state.getValue(TASTY) && state.getValue(AGE) < 3)
-            world.setBlockState(pos, state.withProperty(TASTY, false));
-
-        if (state.getValue(AGE) < 3) {
+        if (!isMature(state)) {
             if(rand.nextFloat() >= 0.85)
                 world.setBlockState(pos, state.cycleProperty(AGE));
-        } else if (!state.getValue(TASTY) && rand.nextFloat() >= 0.95F) {
-            world.setBlockState(pos, state.withProperty(TASTY, true));
+        } else if (!isTasty(state) && rand.nextFloat() >= 0.95F) {
+            world.setBlockState(pos, state.withProperty(AGE, 4));
         }
     }
 
@@ -88,6 +84,7 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
             case 1: return AGE_1_AABB;
             case 2: return AGE_2_AABB;
             case 3: return FULL_BLOCK_AABB;
+            case 4: return FULL_BLOCK_AABB;
         }
         return super.getBoundingBox(state, source, pos);
     }
@@ -112,20 +109,25 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        if (meta >= 4)
-            return getDefaultState().withProperty(AGE, 3).withProperty(TASTY, true);
-
         return getDefaultState().withProperty(AGE, meta);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(TASTY) ? 4 : state.getValue(AGE);
+        return state.getValue(AGE);
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer.Builder(this).add(AGE, TASTY).build();
+        return new BlockStateContainer.Builder(this).add(AGE).build();
+    }
+
+    public boolean isMature(IBlockState state) {
+        return state.getValue(AGE) >= 3;
+    }
+
+    public boolean isTasty(IBlockState state) {
+        return state.getValue(AGE) == 4;
     }
 
     @Override
