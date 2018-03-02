@@ -17,6 +17,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import tehnut.gourmet.Gourmet;
+import tehnut.gourmet.core.data.ConsumeStyle;
 import tehnut.gourmet.core.data.EatenEffect;
 import tehnut.gourmet.core.data.Harvest;
 import tehnut.gourmet.core.util.IHarvestContainer;
@@ -41,7 +42,7 @@ public class ItemEdible extends ItemFood implements IHarvestContainer {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
-        if (player.canEat(harvest.isAlwaysEdible())) {
+        if (player.canEat(harvest.isAlwaysEdible()) && harvest.getConsumptionStyle() != ConsumeStyle.NONE) {
             player.setActiveHand(hand);
             return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
         }
