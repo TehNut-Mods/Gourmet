@@ -169,7 +169,9 @@ public final class Harvest {
         public Harvest build() {
 
             switch (growthType) {
-                case CROP: if (cropGrowth == null) throw new RuntimeException("Harvests with a type of CROP must provide a CropGrowth.");
+                case CROP: 
+                    if (cropGrowth == null) 
+                        throw new RuntimeException("Harvests with a type of CROP must provide a CropGrowth.");
             }
 
             Harvest harvest = new Harvest(hungerProvided, saturationModifier, simpleName, growthType, consumptionStyle, alwaysEdible, timeToEat, oreDictionaryNames.toArray(new String[0]), effects.toArray(new EatenEffect[0]), cropGrowth);
@@ -181,13 +183,67 @@ public final class Harvest {
     // TODO
     public static class Serializer implements JsonSerializer<Harvest>, JsonDeserializer<Harvest> {
         @Override
-        public Harvest deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return null;
+        public Harvest deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject json = element.getAsJsonObject();
+            String simpleName = json.getAsJsonPrimitive("name").getAsString();
+            int hungerProvided = json.getAsJsonPrimitive("hungerProvided").getAsInt();
+            float saturationModifier = json.getAsJsonPrimitive("saturationModifier").getAsFloat();
+            
+            Builder builder = new Builder(simpleName, hungerProvided, saturationModifier);
+            
+            if (json.has("growthType"))
+                builder.setGrowthType(GrowthType.valueOf(json.getAsJsonPrimitive("growthType").getAsString()));
+            
+            switch (builder.growthType) {
+                case CROP: {
+                    if (!json.has("cropGrowth"))
+                        throw new RuntimeException("Harvests with a type of CROP must provide a CropGrowth.");
+                    
+                    builder.setCropGrowth(context.deserialize(json.get("cropGrowth"), CropGrowth.class));
+                }
+            }
+            
+            if (json.has("consumptionStyle"))
+                builder.setConsumptionStyle(ConsumeStyle.valueOf(json.getAsJsonPrimitive("consumptionStyle").getAsString()));
+            
+            if (json.has("alwaysEdible") && json.getAsJsonPrimitive("alwaysEdible").getAsBoolean())
+                builder.setAlwaysEdible();
+            
+            if (json.has("timeToEat"))
+                builder.setTimeToEat(json.getAsJsonPrimitive("timeToEat").getAsInt());
+            
+            if (json.has("oreDictionaryNames"))
+                builder.addOreDictionaryNames(context.deserialize(json.get("oreDictionaryNames"), String[].class));
+
+            if (json.has("effects"))
+                builder.addEffect(context.deserialize(json.get("effects"), EatenEffect[].class));
+            
+            return builder.build();
         }
 
         @Override
         public JsonElement serialize(Harvest src, Type typeOfSrc, JsonSerializationContext context) {
-            return null;
+            JsonObject json = new JsonObject();
+            json.addProperty("name", src.simpleName);
+            json.addProperty("hungerProvided", src.hungerProvided);
+            json.addProperty("saturationModifier", src.saturationModifier);
+
+            json.addProperty("growthType", src.growthType.name());
+            switch (src.growthType) {
+                case NONE: break;
+                case CROP: {
+                    json.add("cropGrowth", context.serialize(src.cropGrowth));
+                    break;
+                }
+            }
+
+            json.addProperty("consumptionStyle", src.consumptionStyle.name());
+            json.addProperty("alwaysEdible", src.alwaysEdible);
+            json.addProperty("timeToEat", src.timeToEat);
+            json.add("oreDictionaryNames", context.serialize(src.oreDictionaryNames));
+            json.add("effects", context.serialize(src.effects));
+
+            return json;
         }
     }
 }

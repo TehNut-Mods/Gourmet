@@ -1,5 +1,6 @@
 package tehnut.gourmet;
 
+import com.google.common.collect.Lists;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -11,8 +12,11 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import tehnut.gourmet.core.RegistrarGourmet;
-import tehnut.gourmet.core.RegistrarGourmetHarvests;
+import tehnut.gourmet.core.util.loader.HarvestLoader;
+import tehnut.gourmet.core.util.loader.IHarvestLoader;
 import tehnut.gourmet.proxy.IProxy;
+
+import java.util.List;
 
 @Mod(modid = Gourmet.MODID, name = Gourmet.NAME, version = Gourmet.VERSION)
 public class Gourmet {
@@ -21,6 +25,7 @@ public class Gourmet {
     public static final String NAME = "Gourmet";
     public static final String VERSION = "@VERSION@";
     public static final boolean DEV_MODE = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+    public static final List<IHarvestLoader> HARVEST_LOADERS = Lists.newArrayList();
     public static final CreativeTabs TAB_GOURMET = new CreativeTabs(MODID) {
         private Item display = Items.WHEAT;
         @Override
@@ -38,8 +43,9 @@ public class Gourmet {
     public void preInit(FMLPreInitializationEvent event) {
         PROXY.preInit();
 
-        RegistrarGourmetHarvests.gatherBuiltin(RegistrarGourmet.getHarvestInfo());
-        RegistrarGourmetHarvests.gatherConfigured(RegistrarGourmet.getHarvestInfo());
+        HARVEST_LOADERS.addAll(HarvestLoader.Gather.gather(event.getAsmData()));
+        for (IHarvestLoader loader : HARVEST_LOADERS)
+            loader.gatherHarvests(RegistrarGourmet.getHarvestInfo());
     }
 
     @Mod.EventHandler
