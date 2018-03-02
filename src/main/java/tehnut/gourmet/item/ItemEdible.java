@@ -19,12 +19,13 @@ import net.minecraft.world.World;
 import tehnut.gourmet.Gourmet;
 import tehnut.gourmet.core.data.EatenEffect;
 import tehnut.gourmet.core.data.Harvest;
+import tehnut.gourmet.core.util.IHarvestContainer;
 import tehnut.gourmet.core.util.StringUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemEdible extends ItemFood {
+public class ItemEdible extends ItemFood implements IHarvestContainer {
 
     private final Harvest harvest;
 
@@ -106,5 +107,10 @@ public class ItemEdible extends ItemFood {
         }
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
+
+    @Override
+    public Harvest getHarvest() {
+        return harvest;
     }
 }

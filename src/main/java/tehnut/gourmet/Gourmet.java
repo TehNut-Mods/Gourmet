@@ -11,7 +11,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import tehnut.gourmet.core.GourmetCallbackHandler;
 import tehnut.gourmet.core.RegistrarGourmet;
+import tehnut.gourmet.core.util.GourmetLog;
 import tehnut.gourmet.core.util.loader.HarvestLoader;
 import tehnut.gourmet.core.util.loader.IHarvestLoader;
 import tehnut.gourmet.proxy.IProxy;
@@ -40,6 +42,16 @@ public class Gourmet {
     public static IProxy PROXY;
 
     @Mod.EventHandler
+    public void construction(FMLConstructionEvent event) {
+        try {
+            GourmetCallbackHandler.getBlockAddWrapper().wrapParent();
+            GourmetCallbackHandler.getBlockAddWrapper().wrapParent();
+        } catch (Exception e) {
+            GourmetLog.DEFAULT.warn("Failed to wrap AddCallback. Mods that replace our objects may not work properly.");
+        }
+    }
+
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         PROXY.preInit();
 
@@ -56,5 +68,10 @@ public class Gourmet {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         PROXY.postInit();
+    }
+
+    @Mod.EventHandler
+    public void registryRemap(FMLModIdMappingEvent event) {
+        GourmetCallbackHandler.handlePostCallback();
     }
 }

@@ -23,11 +23,12 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tehnut.gourmet.Gourmet;
 import tehnut.gourmet.core.data.Harvest;
+import tehnut.gourmet.core.util.IHarvestContainer;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class BlockBerryBush extends BlockBush {
+public class BlockBerryBush extends BlockBush implements IHarvestContainer {
 
     public static final IProperty<Integer> AGE = PropertyInteger.create("age", 0, 3);
     public static final IProperty<Boolean> TASTY = PropertyBool.create("tasty");
@@ -125,5 +126,10 @@ public class BlockBerryBush extends BlockBush {
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer.Builder(this).add(AGE, TASTY).build();
+    }
+
+    @Override
+    public Harvest getHarvest() {
+        return harvest;
     }
 }

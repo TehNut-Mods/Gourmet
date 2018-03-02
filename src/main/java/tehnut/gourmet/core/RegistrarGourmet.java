@@ -106,6 +106,8 @@ public class RegistrarGourmet {
 
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+        GourmetCallbackHandler.handlePostCallback();
+
         List<SmeltingLoader.SmeltingRecipe> smeltingRecipes = Lists.newArrayList();
         SmeltingLoader.gatherRecipes(smeltingRecipes);
         for (SmeltingLoader.SmeltingRecipe recipe : smeltingRecipes)
@@ -134,6 +136,10 @@ public class RegistrarGourmet {
 
     public static Map<Harvest, BlockCrop> getCrops() {
         return CROPS;
+    }
+
+    public static Map<Harvest, BlockBerryBush> getBerryBushes() {
+        return BERRY_BUSHES;
     }
 
     public static Map<Harvest, ItemEdible> getEdibles() {
