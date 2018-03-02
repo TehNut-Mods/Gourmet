@@ -45,7 +45,7 @@ public class Gourmet {
     public void construction(FMLConstructionEvent event) {
         try {
             GourmetCallbackHandler.getBlockAddWrapper().wrapParent();
-            GourmetCallbackHandler.getBlockAddWrapper().wrapParent();
+            GourmetCallbackHandler.getItemAddWrapper().wrapParent();
         } catch (Exception e) {
             GourmetLog.DEFAULT.warn("Failed to wrap AddCallback. Mods that replace our objects may not work properly.");
         }
