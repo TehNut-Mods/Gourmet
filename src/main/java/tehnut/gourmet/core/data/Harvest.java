@@ -26,8 +26,10 @@ public final class Harvest {
     private final EatenEffect[] effects;
     @Nullable // Only exists if growthType is CROP
     private final CropGrowth cropGrowth;
+    @Nullable // Only exists if growthType is BUSH
+    private final BushGrowth bushGrowth;
 
-    private Harvest(int hungerProvided, float saturationModifier, String simpleName, GrowthType growthType, ConsumeStyle consumptionStyle, boolean alwaysEdible, int timeToEat, String[] oreDictionaryNames, EatenEffect[] effects, CropGrowth cropGrowth) {
+    private Harvest(int hungerProvided, float saturationModifier, String simpleName, GrowthType growthType, ConsumeStyle consumptionStyle, boolean alwaysEdible, int timeToEat, String[] oreDictionaryNames, EatenEffect[] effects, CropGrowth cropGrowth, BushGrowth bushGrowth) {
         this.hungerProvided = hungerProvided;
         this.saturationModifier = saturationModifier;
         this.simpleName = simpleName;
@@ -38,6 +40,7 @@ public final class Harvest {
         this.oreDictionaryNames = oreDictionaryNames;
         this.effects = effects;
         this.cropGrowth = cropGrowth;
+        this.bushGrowth = bushGrowth;
     }
 
     public int getHungerProvided() {
@@ -81,6 +84,11 @@ public final class Harvest {
         return cropGrowth;
     }
 
+    @Nullable
+    public BushGrowth getBushGrowth() {
+        return bushGrowth;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,18 +106,7 @@ public final class Harvest {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
-                .append("hungerProvided", hungerProvided)
-                .append("saturationModifier", saturationModifier)
-                .append("simpleName", simpleName)
-                .append("growthType", growthType)
-                .append("consumptionStyle", consumptionStyle)
-                .append("alwaysEdible", alwaysEdible)
-                .append("timeToEat", timeToEat)
-                .append("oreDictionaryNames", oreDictionaryNames)
-                .append("effects", effects)
-                .append("cropGrowth", cropGrowth)
-                .toString();
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
     }
 
     public static final class Builder {
@@ -124,6 +121,7 @@ public final class Harvest {
         private final Set<String> oreDictionaryNames = Sets.newHashSet();
         private final Set<EatenEffect> effects = Sets.newHashSet();
         private CropGrowth cropGrowth;
+        private BushGrowth bushGrowth;
 
         public Builder(String simpleName, int hungerProvided, float saturationModifier) {
             this.simpleName = simpleName;
@@ -166,6 +164,11 @@ public final class Harvest {
             return this;
         }
 
+        public Builder setBushGrowth(BushGrowth bushGrowth) {
+            this.bushGrowth = bushGrowth;
+            return this;
+        }
+
         public Harvest build() {
 
             switch (growthType) {
@@ -174,13 +177,12 @@ public final class Harvest {
                         throw new RuntimeException("Harvests with a type of CROP must provide a CropGrowth.");
             }
 
-            Harvest harvest = new Harvest(hungerProvided, saturationModifier, simpleName, growthType, consumptionStyle, alwaysEdible, timeToEat, oreDictionaryNames.toArray(new String[0]), effects.toArray(new EatenEffect[0]), cropGrowth);
+            Harvest harvest = new Harvest(hungerProvided, saturationModifier, simpleName, growthType, consumptionStyle, alwaysEdible, timeToEat, oreDictionaryNames.toArray(new String[0]), effects.toArray(new EatenEffect[0]), cropGrowth, bushGrowth);
             GourmetLog.FOOD_LOADER.info("Constructed as {}", ToStringBuilder.reflectionToString(harvest, ToStringStyle.NO_CLASS_NAME_STYLE));
             return harvest;
         }
     }
 
-    // TODO
     public static class Serializer implements JsonSerializer<Harvest>, JsonDeserializer<Harvest> {
         @Override
         public Harvest deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -195,11 +197,18 @@ public final class Harvest {
                 builder.setGrowthType(GrowthType.valueOf(json.getAsJsonPrimitive("growthType").getAsString()));
             
             switch (builder.growthType) {
+                case NONE: break;
                 case CROP: {
                     if (!json.has("cropGrowth"))
                         throw new RuntimeException("Harvests with a type of CROP must provide a CropGrowth.");
                     
                     builder.setCropGrowth(context.deserialize(json.get("cropGrowth"), CropGrowth.class));
+                }
+                case BUSH: {
+                    if (!json.has("bushGrowth"))
+                        throw new RuntimeException("Harvests with a type of BUSH must provide a BushGrowth.");
+
+                    builder.setBushGrowth(context.deserialize(json.get("bushGrowth"), BushGrowth.class));
                 }
             }
             
@@ -233,6 +242,10 @@ public final class Harvest {
                 case NONE: break;
                 case CROP: {
                     json.add("cropGrowth", context.serialize(src.cropGrowth));
+                    break;
+                }
+                case BUSH: {
+                    json.add("bushGrowth", context.serialize(src.bushGrowth));
                     break;
                 }
             }

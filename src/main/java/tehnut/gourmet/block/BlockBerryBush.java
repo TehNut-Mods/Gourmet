@@ -69,6 +69,10 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         super.updateTick(world, pos, state, rand);
+
+        if (!harvest.getBushGrowth().checkLight(world.getLightFromNeighbors(pos.up())))
+            return;
+
         if (!isMature(state)) {
             if(rand.nextFloat() >= 0.85)
                 world.setBlockState(pos, state.cycleProperty(AGE));
