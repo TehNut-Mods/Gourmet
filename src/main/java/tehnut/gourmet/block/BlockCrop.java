@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import tehnut.gourmet.core.RegistrarGourmet;
 import tehnut.gourmet.core.data.Harvest;
 import tehnut.gourmet.core.util.IHarvestContainer;
@@ -27,6 +28,25 @@ public class BlockCrop extends BlockCrops implements IHarvestContainer {
         this.realBlockState = new BlockStateContainer.Builder(this).add(age).build();
 
         setDefaultState(getBlockState().getBaseState().withProperty(age, 0));
+    }
+
+    // Have to bypass BlockCrops updateTick() to handle light checks on our own
+    @Override
+    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+        this.checkAndDropBlock(world, pos, state);
+
+        if (!harvest.getCropGrowth().checkLight(world.getLightFromNeighbors(pos.up())))
+            return;
+
+        int age = getAge(state);
+        if (age >= getMaxAge())
+            return;
+
+        float growthChance = getGrowthChance(this, world, pos);
+        if (ForgeHooks.onCropsGrowPre(world, pos, state, rand.nextInt((int)(25.0F / growthChance) + 1) == 0)) {
+            world.setBlockState(pos, state.cycleProperty(getAgeProperty()));
+            ForgeHooks.onCropsGrowPost(world, pos, state, state.cycleProperty(getAgeProperty()));
+        }
     }
 
     @Override
