@@ -49,6 +49,8 @@ public class Gourmet {
         } catch (Exception e) {
             GourmetLog.DEFAULT.warn("Failed to wrap AddCallback. Mods that replace our objects may not work properly.");
         }
+
+        PROXY.construction();
     }
 
     @Mod.EventHandler
