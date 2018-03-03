@@ -32,6 +32,7 @@ import tehnut.gourmet.item.ItemSeed;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("ConstantConditions")
 @Mod.EventBusSubscriber(modid = Gourmet.MODID)
 @GameRegistry.ObjectHolder(Gourmet.MODID)
 public class RegistrarGourmet {

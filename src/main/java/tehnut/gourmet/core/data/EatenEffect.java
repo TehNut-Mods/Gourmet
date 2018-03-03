@@ -5,6 +5,8 @@ import com.google.gson.annotations.JsonAdapter;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import tehnut.gourmet.core.util.GourmetLog;
 
 import java.lang.reflect.Type;
@@ -40,13 +42,19 @@ public final class EatenEffect {
         return chance;
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
+    }
+
     public static class Serializer implements JsonSerializer<EatenEffect>, JsonDeserializer<EatenEffect> {
         @Override
-        public EatenEffect deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            ResourceLocation potionId = new ResourceLocation(json.getAsJsonObject().getAsJsonPrimitive("potion").getAsString());
-            int amplifier = json.getAsJsonObject().has("amplifier") ? json.getAsJsonObject().getAsJsonPrimitive("amplifier").getAsInt() : 0;
-            int duration = json.getAsJsonObject().has("duration") ? json.getAsJsonObject().getAsJsonPrimitive("duration").getAsInt() : 100;
-            double chance = json.getAsJsonObject().has("chance") ? json.getAsJsonObject().getAsJsonPrimitive("duration").getAsDouble() : 1.0D;
+        public EatenEffect deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject json = element.getAsJsonObject();
+            ResourceLocation potionId = new ResourceLocation(json.getAsJsonPrimitive("potion").getAsString());
+            int amplifier = json.has("amplifier") ? json.getAsJsonPrimitive("amplifier").getAsInt() : 0;
+            int duration = json.has("duration") ? json.getAsJsonPrimitive("duration").getAsInt() : 100;
+            double chance = json.has("chance") ? json.getAsJsonPrimitive("duration").getAsDouble() : 1.0D;
 
             Potion potion = ForgeRegistries.POTIONS.getValue(potionId);
             if (potion == null) {

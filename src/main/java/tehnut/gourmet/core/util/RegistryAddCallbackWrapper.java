@@ -33,6 +33,7 @@ public final class RegistryAddCallbackWrapper<T extends IForgeRegistryEntry<T>> 
 
     public void wrapParent() throws Exception {
         ForgeRegistry<T> registry = (ForgeRegistry<T>) GameRegistry.findRegistry(registryType);
+        //noinspection unchecked
         IForgeRegistry.AddCallback<T> oldCallback = (IForgeRegistry.AddCallback<T>) CALLBACK_FIELD.get(registry);
         EnumHelper.setFailsafeFieldValue(CALLBACK_FIELD, registry, (IForgeRegistry.AddCallback<T>) (owner, stage, id, obj, oldObj) -> {
             oldCallback.onAdd(owner, stage, id, obj, oldObj);

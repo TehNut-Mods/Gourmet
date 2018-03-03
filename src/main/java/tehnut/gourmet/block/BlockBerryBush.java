@@ -4,7 +4,6 @@ import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockGrass;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -111,6 +110,7 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
         return blockState.getBoundingBox(worldIn, pos);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(AGE, meta);

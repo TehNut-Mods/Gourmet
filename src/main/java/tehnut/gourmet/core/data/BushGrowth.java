@@ -11,6 +11,8 @@ import java.util.function.Predicate;
 @JsonAdapter(BushGrowth.Serializer.class)
 public class BushGrowth {
 
+    public static final BushGrowth DEFAULT = new BushGrowth(3, 9);
+
     private final int maxProduce;
     private final Predicate<Integer> lightCheck;
     // For serialization purposes
@@ -24,6 +26,10 @@ public class BushGrowth {
         this.maxLight = maxLight;
     }
 
+    public BushGrowth(int maxProduce, int minLight) {
+        this(maxProduce, minLight, 15);
+    }
+
     public int getMaxProduce() {
         return maxProduce;
     }
@@ -34,20 +40,16 @@ public class BushGrowth {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
-                .append("maxProduce", maxProduce)
-                .append("lightCheck", lightCheck)
-                .append("minLight", minLight)
-                .append("maxLight", maxLight)
-                .toString();
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
     }
 
     public static class Serializer implements JsonSerializer<BushGrowth>, JsonDeserializer<BushGrowth> {
         @Override
-        public BushGrowth deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            int maxProduce = json.getAsJsonObject().has("maxProduce") ? json.getAsJsonObject().getAsJsonPrimitive("maxProduce").getAsInt() : 15;
-            int minLight = json.getAsJsonObject().has("minLight") ? json.getAsJsonObject().getAsJsonPrimitive("minLight").getAsInt() : 8;
-            int maxLight = json.getAsJsonObject().has("maxLight") ? json.getAsJsonObject().getAsJsonPrimitive("maxLight").getAsInt() : 15;
+        public BushGrowth deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject json = element.getAsJsonObject();
+            int maxProduce = json.has("maxProduce") ? json.getAsJsonPrimitive("maxProduce").getAsInt() : 15;
+            int minLight = json.has("minLight") ? json.getAsJsonPrimitive("minLight").getAsInt() : 8;
+            int maxLight = json.has("maxLight") ? json.getAsJsonPrimitive("maxLight").getAsInt() : 15;
             return new BushGrowth(maxProduce, minLight, maxLight);
         }
 

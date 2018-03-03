@@ -11,6 +11,8 @@ import java.util.function.Predicate;
 @JsonAdapter(CropGrowth.Serializer.class)
 public final class CropGrowth {
 
+    public static final CropGrowth DEFAULT = new CropGrowth(7, true, 9);
+
     private final int stages;
     private final boolean canFertilize;
     private final Predicate<Integer> lightCheck;
@@ -21,9 +23,13 @@ public final class CropGrowth {
     public CropGrowth(int stages, boolean canFertilize, int minLight, int maxLight) {
         this.stages = stages;
         this.canFertilize = canFertilize;
-        this.lightCheck = (light) -> light >= minLight && light <= maxLight;
+        this.lightCheck = light -> light >= minLight && light <= maxLight;
         this.minLight = minLight;
         this.maxLight = maxLight;
+    }
+
+    public CropGrowth(int stages, boolean canFertilize, int minLight) {
+        this(stages, canFertilize, minLight, 15);
     }
 
     public int getStages() {
@@ -40,21 +46,17 @@ public final class CropGrowth {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
-                .append("stages", stages)
-                .append("canFertilize", canFertilize)
-                .append("minLight", minLight)
-                .append("maxLight", maxLight)
-                .toString();
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.NO_CLASS_NAME_STYLE);
     }
 
     public static class Serializer implements JsonSerializer<CropGrowth>, JsonDeserializer<CropGrowth> {
         @Override
-        public CropGrowth deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            int stages = json.getAsJsonObject().has("stages") ? json.getAsJsonObject().getAsJsonPrimitive("stages").getAsInt() : 7;
-            boolean canFertilize = !json.getAsJsonObject().has("canFertilize") || json.getAsJsonObject().getAsJsonPrimitive("canFertilize").getAsBoolean();
-            int minLight = json.getAsJsonObject().has("minLight") ? json.getAsJsonObject().getAsJsonPrimitive("minLight").getAsInt() : 8;
-            int maxLight = json.getAsJsonObject().has("maxLight") ? json.getAsJsonObject().getAsJsonPrimitive("maxLight").getAsInt() : 15;
+        public CropGrowth deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject json = element.getAsJsonObject();
+            int stages = json.has("stages") ? json.getAsJsonPrimitive("stages").getAsInt() : 7;
+            boolean canFertilize = !json.has("canFertilize") || json.getAsJsonPrimitive("canFertilize").getAsBoolean();
+            int minLight = json.has("minLight") ? json.getAsJsonPrimitive("minLight").getAsInt() : 8;
+            int maxLight = json.has("maxLight") ? json.getAsJsonPrimitive("maxLight").getAsInt() : 15;
 
             return new CropGrowth(stages, canFertilize, minLight, maxLight);
         }
