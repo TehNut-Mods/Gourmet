@@ -172,9 +172,12 @@ public final class Harvest {
         public Harvest build() {
 
             switch (growthType) {
-                case CROP: 
-                    if (cropGrowth == null) 
-                        throw new RuntimeException("Harvests with a type of CROP must provide a CropGrowth.");
+                case CROP:
+                    if (cropGrowth == null)
+                        cropGrowth = CropGrowth.DEFAULT;
+                case BUSH:
+                    if (bushGrowth == null)
+                        bushGrowth = BushGrowth.DEFAULT;
             }
 
             Harvest harvest = new Harvest(hungerProvided, saturationModifier, simpleName, growthType, consumptionStyle, alwaysEdible, timeToEat, oreDictionaryNames.toArray(new String[0]), effects.toArray(new EatenEffect[0]), cropGrowth, bushGrowth);
@@ -199,14 +202,18 @@ public final class Harvest {
             switch (builder.growthType) {
                 case NONE: break;
                 case CROP: {
-                    if (!json.has("cropGrowth"))
-                        throw new RuntimeException("Harvests with a type of CROP must provide a CropGrowth.");
-                    
+                    if (!json.has("cropGrowth")) {
+                        builder.setCropGrowth(CropGrowth.DEFAULT);
+                        break;
+                    }
+
                     builder.setCropGrowth(context.deserialize(json.get("cropGrowth"), CropGrowth.class));
                 }
                 case BUSH: {
-                    if (!json.has("bushGrowth"))
-                        throw new RuntimeException("Harvests with a type of BUSH must provide a BushGrowth.");
+                    if (!json.has("bushGrowth")) {
+                        builder.setBushGrowth(BushGrowth.DEFAULT);
+                        break;
+                    }
 
                     builder.setBushGrowth(context.deserialize(json.get("bushGrowth"), BushGrowth.class));
                 }
@@ -226,7 +233,7 @@ public final class Harvest {
 
             if (json.has("effects"))
                 builder.addEffect(context.deserialize(json.get("effects"), EatenEffect[].class));
-            
+
             return builder.build();
         }
 
@@ -241,11 +248,13 @@ public final class Harvest {
             switch (src.growthType) {
                 case NONE: break;
                 case CROP: {
-                    json.add("cropGrowth", context.serialize(src.cropGrowth));
+                    if (src.cropGrowth != CropGrowth.DEFAULT)
+                        json.add("cropGrowth", context.serialize(src.cropGrowth));
                     break;
                 }
                 case BUSH: {
-                    json.add("bushGrowth", context.serialize(src.bushGrowth));
+                    if (src.bushGrowth != BushGrowth.DEFAULT)
+                        json.add("bushGrowth", context.serialize(src.bushGrowth));
                     break;
                 }
             }
