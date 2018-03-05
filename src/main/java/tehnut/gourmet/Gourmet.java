@@ -59,7 +59,7 @@ public class Gourmet {
 
         HARVEST_LOADERS.addAll(HarvestLoader.Gather.gather(event.getAsmData()));
         for (IHarvestLoader loader : HARVEST_LOADERS)
-            loader.gatherHarvests(RegistrarGourmet.getHarvestInfo());
+            loader.gatherHarvests(RegistrarGourmet.getHarvestInfo()::add);
     }
 
     @Mod.EventHandler

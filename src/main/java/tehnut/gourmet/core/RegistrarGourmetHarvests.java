@@ -17,12 +17,12 @@ public class RegistrarGourmetHarvests {
 
     @HarvestLoader
     public static final IHarvestLoader BUILTIN = harvests -> {
-        harvests.add(new Harvest.Builder("sliced_bread", 1, 0.2F).build());
-        harvests.add(new Harvest.Builder("toast", 2, 0.8F).build());
-        harvests.add(new Harvest.Builder("strawberry", 1, 0.1F).setGrowthType(GrowthType.BUSH).setBushGrowth(BushGrowth.DEFAULT).setAlwaysEdible().build());
-        harvests.add(new Harvest.Builder("blueberry", 1, 0.1F).setGrowthType(GrowthType.BUSH).setBushGrowth(BushGrowth.DEFAULT).setAlwaysEdible().build());
-        harvests.add(new Harvest.Builder("jam_strawberry", 5, 0.2F).setConsumptionStyle(ConsumeStyle.DRINK).addEffect(new EatenEffect(MobEffects.SPEED, 0, 100, 1.0D)).setAlwaysEdible().build());
-        harvests.add(new Harvest.Builder("jam_blueberry", 5, 0.2F).setConsumptionStyle(ConsumeStyle.DRINK).addEffect(new EatenEffect(MobEffects.SPEED, 0, 100, 1.0D)).setAlwaysEdible().build());
+        harvests.accept(new Harvest.Builder("sliced_bread", 1, 0.2F).build());
+        harvests.accept(new Harvest.Builder("toast", 2, 0.8F).build());
+        harvests.accept(new Harvest.Builder("strawberry", 1, 0.1F).setGrowthType(GrowthType.BUSH).setBushGrowth(BushGrowth.DEFAULT).setAlwaysEdible().build());
+        harvests.accept(new Harvest.Builder("blueberry", 1, 0.1F).setGrowthType(GrowthType.BUSH).setBushGrowth(BushGrowth.DEFAULT).setAlwaysEdible().build());
+        harvests.accept(new Harvest.Builder("jam_strawberry", 5, 0.2F).setConsumptionStyle(ConsumeStyle.DRINK).addEffect(new EatenEffect(MobEffects.SPEED, 0, 100, 1.0D)).setAlwaysEdible().build());
+        harvests.accept(new Harvest.Builder("jam_blueberry", 5, 0.2F).setConsumptionStyle(ConsumeStyle.DRINK).addEffect(new EatenEffect(MobEffects.SPEED, 0, 100, 1.0D)).setAlwaysEdible().build());
     };
 
     @HarvestLoader
@@ -38,6 +38,6 @@ public class RegistrarGourmetHarvests {
             return;
 
         for (File file : jsonFiles)
-            harvests.add(JsonUtil.fromJson(TypeToken.get(Harvest.class), file));
+            harvests.accept(JsonUtil.fromJson(TypeToken.get(Harvest.class), file));
     };
 }
