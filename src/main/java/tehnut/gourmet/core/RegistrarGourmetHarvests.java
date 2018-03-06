@@ -6,10 +6,13 @@ import net.minecraftforge.fml.common.Loader;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import tehnut.gourmet.Gourmet;
 import tehnut.gourmet.core.data.*;
+import tehnut.gourmet.core.util.DumbassHarvestXMLParser;
 import tehnut.gourmet.core.util.loader.HarvestLoader;
 import tehnut.gourmet.core.util.loader.IHarvestLoader;
 import tehnut.gourmet.core.util.JsonUtil;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.FileFilter;
 
@@ -39,5 +42,27 @@ public class RegistrarGourmetHarvests {
 
         for (File file : jsonFiles)
             harvests.accept(JsonUtil.fromJson(TypeToken.get(Harvest.class), file));
+    };
+
+    @HarvestLoader
+    public static final IHarvestLoader XML_LOADER = harvests -> {
+        File harvestDir = new File(Loader.instance().getConfigDir(), Gourmet.MODID + "/harvest");
+        if (!harvestDir.exists()) {
+            harvestDir.mkdirs();
+            return;
+        }
+
+        File[] xmlFiles = harvestDir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".xml"));
+        if (xmlFiles == null)
+            return;
+
+        for (File file : xmlFiles) {
+            try {
+                SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+                parser.parse(file, new DumbassHarvestXMLParser(harvests));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     };
 }
