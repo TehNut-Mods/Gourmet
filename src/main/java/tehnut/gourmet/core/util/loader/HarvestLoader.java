@@ -22,7 +22,8 @@ public @interface HarvestLoader {
         public static List<IHarvestLoader> gather(ASMDataTable dataTable) {
             Stopwatch stopwatch = Stopwatch.createStarted();
             List<IHarvestLoader> loaders = Lists.newArrayList();
-            Set<ASMDataTable.ASMData> discoveredLoaders = dataTable.getAll(HarvestLoader.class.getName());
+            List<ASMDataTable.ASMData> discoveredLoaders = Lists.newArrayList(dataTable.getAll(HarvestLoader.class.getName()));
+            discoveredLoaders.sort((o1, o2) -> o1.getObjectName().compareToIgnoreCase(o2.getClassName()));
 
             for (ASMDataTable.ASMData data : discoveredLoaders) {
                 try {
