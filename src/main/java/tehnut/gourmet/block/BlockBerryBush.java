@@ -95,13 +95,13 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
     @Override
     public boolean canBlockStay(World world, BlockPos pos, IBlockState state) {
         IBlockState down = world.getBlockState(pos.down());
-        return down.getBlock() instanceof BlockGrass || (down.getBlock() instanceof BlockBerryBush && down.getValue(AGE) == 3);
+        return down.getBlock() instanceof BlockGrass || (down.getBlock() instanceof BlockBerryBush && isMature(down));
     }
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        IBlockState state = world.getBlockState(pos.down());
-        return state.getBlock() instanceof BlockGrass || (state.getBlock() instanceof BlockBerryBush && state.getValue(AGE) == 3);
+        IBlockState down = world.getBlockState(pos.down());
+        return down.getBlock() instanceof BlockGrass || (down.getBlock() instanceof BlockBerryBush && isMature(down));
     }
 
     @Nullable
