@@ -2,6 +2,7 @@ package tehnut.gourmet.core.util.loader;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import tehnut.gourmet.core.util.GourmetLog;
 
@@ -18,6 +19,8 @@ import java.util.Set;
 @Target(ElementType.FIELD)
 public @interface HarvestLoader {
 
+    String value() default "";
+
     class Gather {
         public static List<IHarvestLoader> gather(ASMDataTable dataTable) {
             Stopwatch stopwatch = Stopwatch.createStarted();
@@ -26,6 +29,11 @@ public @interface HarvestLoader {
             discoveredLoaders.sort((o1, o2) -> o1.getObjectName().compareToIgnoreCase(o2.getClassName()));
 
             for (ASMDataTable.ASMData data : discoveredLoaders) {
+
+                String required = (String) data.getAnnotationInfo().getOrDefault("value", "");
+                if (!required.isEmpty() && !Loader.isModLoaded(required))
+                    continue;
+
                 try {
                     Class<?> asmClass = Class.forName(data.getClassName());
                     Field potentialLoader = asmClass.getDeclaredField(data.getObjectName());
