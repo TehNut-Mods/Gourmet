@@ -13,25 +13,25 @@ public class BushGrowth {
 
     public static final BushGrowth DEFAULT = new BushGrowth(3, 9);
 
-    private final int maxProduce;
+    private final int maxProduceDrop;
     private final Predicate<Integer> lightCheck;
     // For serialization purposes
     private final transient int minLight;
     private final transient int maxLight;
 
-    public BushGrowth(int maxProduce, int minLight, int maxLight) {
-        this.maxProduce = maxProduce;
+    public BushGrowth(int maxProduceDrop, int minLight, int maxLight) {
+        this.maxProduceDrop = maxProduceDrop;
         this.lightCheck = light -> light >= minLight && light <= maxLight;
         this.minLight = minLight;
         this.maxLight = maxLight;
     }
 
-    public BushGrowth(int maxProduce, int minLight) {
-        this(maxProduce, minLight, 15);
+    public BushGrowth(int maxProduceDrop, int minLight) {
+        this(maxProduceDrop, minLight, 15);
     }
 
-    public int getMaxProduce() {
-        return maxProduce;
+    public int getMaxProduceDrop() {
+        return maxProduceDrop;
     }
 
     public boolean checkLight(int lightLevel) {
@@ -47,16 +47,16 @@ public class BushGrowth {
         @Override
         public BushGrowth deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject json = element.getAsJsonObject();
-            int maxProduce = json.has("maxProduce") ? json.getAsJsonPrimitive("maxProduce").getAsInt() : 15;
-            int minLight = json.has("minLight") ? json.getAsJsonPrimitive("minLight").getAsInt() : 8;
-            int maxLight = json.has("maxLight") ? json.getAsJsonPrimitive("maxLight").getAsInt() : 15;
+            int maxProduce = json.has("maxProduceDrop") ? json.getAsJsonPrimitive("maxProduceDrop").getAsInt() : DEFAULT.maxProduceDrop;
+            int minLight = json.has("minLight") ? json.getAsJsonPrimitive("minLight").getAsInt() : DEFAULT.minLight;
+            int maxLight = json.has("maxLight") ? json.getAsJsonPrimitive("maxLight").getAsInt() : DEFAULT.maxLight;
             return new BushGrowth(maxProduce, minLight, maxLight);
         }
 
         @Override
         public JsonElement serialize(BushGrowth src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject object = new JsonObject();
-            object.addProperty("maxProduce", src.maxProduce);
+            object.addProperty("maxProduceDrop", src.maxProduceDrop);
             object.addProperty("minLight", src.minLight);
             object.addProperty("maxLight", src.maxLight);
             return object;

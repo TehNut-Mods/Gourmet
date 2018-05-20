@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -33,6 +34,7 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
     private static final AxisAlignedBB AGE_0_AABB = new AxisAlignedBB(0.3125D, 0, 0.3125D, 0.6875D, 0.375D, 0.6875D);
     private static final AxisAlignedBB AGE_1_AABB = new AxisAlignedBB(0.25D, 0, 0.25D, 0.75D, 0.5D, 0.75D);
     private static final AxisAlignedBB AGE_2_AABB = new AxisAlignedBB(0.125D, 0, 0.125D, 0.875D, 0.8125D, 0.875D);
+    private static final Random RANDOM = new Random();
 
     private final Harvest harvest;
     private Item berryItem;
@@ -52,12 +54,19 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
             if (berryItem == null)
                 berryItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(Gourmet.MODID, "food_" + harvest.getSimpleName()));
 
-            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(berryItem, Math.max(1, world.rand.nextInt(4))));
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(berryItem, Math.max(1, world.rand.nextInt(harvest.getBushGrowth().getMaxProduceDrop() + 1))));
             world.setBlockState(pos, state.withProperty(AGE, 3));
             return true;
         }
 
         return isTasty(state) || super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        drops.add(new ItemStack(this));
+        if (isTasty(state))
+            drops.add(new ItemStack(berryItem, Math.max(1, RANDOM.nextInt(harvest.getBushGrowth().getMaxProduceDrop() + 1))));
     }
 
     @Override

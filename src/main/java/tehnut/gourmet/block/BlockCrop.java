@@ -5,7 +5,10 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import tehnut.gourmet.core.RegistrarGourmet;
@@ -46,6 +49,24 @@ public class BlockCrop extends BlockCrops implements IHarvestContainer {
         if (ForgeHooks.onCropsGrowPre(world, pos, state, rand.nextInt((int)(25.0F / growthChance) + 1) == 0)) {
             world.setBlockState(pos, state.cycleProperty(getAgeProperty()));
             ForgeHooks.onCropsGrowPost(world, pos, state, state.cycleProperty(getAgeProperty()));
+        }
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        int age = getAge(state);
+        Random rand = world instanceof World ? ((World)world).rand : new Random();
+
+        if (age >= getMaxAge()) {
+            for (int i = 0; i < harvest.getCropGrowth().getMaxSeedDrop() + fortune; ++i)
+                if (rand.nextInt(2 * getMaxAge()) <= age)
+                    drops.add(new ItemStack(getSeed()));
+
+            for (int i = 0; i < harvest.getCropGrowth().getMaxProduceDrop() + fortune; ++i)
+                if (rand.nextInt(2 * getMaxAge()) <= age)
+                    drops.add(new ItemStack(getCrop()));
+        } else {
+            drops.add(new ItemStack(getSeed()));
         }
     }
 
