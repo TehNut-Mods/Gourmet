@@ -65,7 +65,7 @@ public class ItemEdible extends ItemFood implements IHarvestContainer {
     protected void onFoodEaten(ItemStack stack, World world, EntityPlayer player) {
         if (!world.isRemote)
             for (EatenEffect effect : harvest.getEffects())
-                if (world.rand.nextDouble() <= effect.getChance())
+                if (effect.getPotion() != null && world.rand.nextDouble() <= effect.getChance())
                     player.addPotionEffect(new PotionEffect(effect.getPotion(), effect.getDuration(), effect.getAmplifier()));
     }
 
@@ -93,6 +93,9 @@ public class ItemEdible extends ItemFood implements IHarvestContainer {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         for (EatenEffect effect : harvest.getEffects()) {
             String effectTooltip;
+            if (effect.getPotion() == null)
+                continue;
+
             PotionEffect potionEffect = new PotionEffect(effect.getPotion(), effect.getDuration(), effect.getAmplifier());
 
             String effectName = I18n.format(potionEffect.getEffectName());
