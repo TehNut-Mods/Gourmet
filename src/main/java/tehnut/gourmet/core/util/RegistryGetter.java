@@ -26,4 +26,9 @@ public class RegistryGetter<T extends IForgeRegistryEntry<T>> {
     public IForgeRegistry<T> getRegistry() {
         return registry;
     }
+
+    @Override
+    public String toString() {
+        return registry.getRegistrySuperType().getSimpleName() + "@" + registryName;
+    }
 }
