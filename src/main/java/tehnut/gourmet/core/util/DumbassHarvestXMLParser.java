@@ -1,9 +1,7 @@
 package tehnut.gourmet.core.util;
 
 import com.google.common.collect.Maps;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -66,7 +64,7 @@ public class DumbassHarvestXMLParser extends DefaultHandler {
                 break;
             }
             case "effect": {
-                Potion potion = (Potion) dataStorage.get("effect_potion");
+                ResourceLocation potion = (ResourceLocation) dataStorage.get("effect_potion");
                 int amplifier = (int) dataStorage.get("effect_amplifier");
                 int duration = (int) dataStorage.get("effect_duration");
                 double chance = (double) dataStorage.get("effect_chance");
@@ -135,7 +133,7 @@ public class DumbassHarvestXMLParser extends DefaultHandler {
             }
             // Effects
             case "potion": {
-                dataStorage.put("effect_potion", ForgeRegistries.POTIONS.getValue(new ResourceLocation(value)));
+                dataStorage.put("effect_potion", new ResourceLocation(value));
                 break;
             }
             case "amplifier": {

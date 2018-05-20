@@ -8,26 +8,34 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import tehnut.gourmet.core.util.GourmetLog;
+import tehnut.gourmet.core.util.RegistryGetter;
 
 import java.lang.reflect.Type;
 
 @JsonAdapter(EatenEffect.Serializer.class)
 public final class EatenEffect {
 
-    private final Potion potion;
+    private final RegistryGetter<Potion> potion;
     private final int amplifier;
     private final int duration;
     private final double chance;
 
-    public EatenEffect(Potion potion, int amplifier, int duration, double chance) {
-        this.potion = potion;
+    public EatenEffect(ResourceLocation registryName, int amplifier, int duration, double chance) {
+        this.potion = new RegistryGetter<>(registryName, ForgeRegistries.POTIONS);
         this.amplifier = amplifier;
         this.duration = duration;
         this.chance = chance;
     }
 
+    public EatenEffect(Potion potion, int amplifier, int duration, double chance) {
+        this(potion.getRegistryName(), amplifier, duration, chance);
+    }
+
     public Potion getPotion() {
-        return potion;
+        Potion value = potion.getValue();
+        if (value == null)
+            GourmetLog.DEFAULT.error("Potion with ID {} was requested from {} registry but does not exist.", potion.getRegistryName(), potion.getRegistry().getRegistrySuperType().getCanonicalName());
+        return potion.getValue();
     }
 
     public int getAmplifier() {
@@ -56,19 +64,13 @@ public final class EatenEffect {
             int duration = json.has("duration") ? json.getAsJsonPrimitive("duration").getAsInt() : 100;
             double chance = json.has("chance") ? json.getAsJsonPrimitive("duration").getAsDouble() : 1.0D;
 
-            Potion potion = ForgeRegistries.POTIONS.getValue(potionId);
-            if (potion == null) {
-                GourmetLog.DEFAULT.error("Potion with ID " + potionId + " was requested, but it does not exist.");
-                return null;
-            }
-
-            return new EatenEffect(potion, amplifier, duration, chance);
+            return new EatenEffect(potionId, amplifier, duration, chance);
         }
 
         @Override
         public JsonElement serialize(EatenEffect src, Type typeOfSrc, JsonSerializationContext context) {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("potion", src.potion.getRegistryName().toString());
+            jsonObject.addProperty("potion", src.potion.getValue().getRegistryName().toString());
             jsonObject.addProperty("amplifier", src.amplifier);
             jsonObject.addProperty("duration", src.duration);
             jsonObject.addProperty("chance", src.chance);
