@@ -1,0 +1,35 @@
+{
+  "name": "example_json",
+  "hungerProvided": 20,
+  "saturationModifier": 5.0,
+  "growthType": "CROP",
+  "cropGrowth": {
+    "maxProduceDrop": 1,
+    "maxSeedDrop": 3,
+    "stages": 5,
+    "canFertilize": true,
+    "minLight": 8,
+    "maxLight": 15
+  },
+  "consumptionStyle": "DRINK",
+  "alwaysEdible": false,
+  "timeToEat": 10,
+  "oreDictionaryNames": [
+    "thisMightBeBadToEat",
+    "foodExampleJSON"
+  ],
+  "effects": [
+    {
+      "potion": "minecraft:speed",
+      "amplifier": 5,
+      "duration": 100,
+      "chance": 1.0
+    },
+    {
+      "potion": "minecraft:weakness",
+      "amplifier": 3,
+      "duration": 100,
+      "chance": 0.25
+    }
+  ]
+}

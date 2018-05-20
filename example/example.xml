@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<harvest name="example_xml" hungerProvided="20" saturationModifier="5.0">
+    <growthType>CROP</growthType>
+    <cropGrowth>
+        <maxProduceDrop>1</maxProduceDrop>
+        <maxSeedDrop>3</maxSeedDrop>
+        <stages>5</stages>
+        <canFertilize>true</canFertilize>
+        <minLight>8</minLight>
+        <maxLight>15</maxLight>
+    </cropGrowth>
+    <consumptionStyle>DRINK</consumptionStyle>
+    <alwaysEdible>false</alwaysEdible>
+    <timeToEat>10</timeToEat>
+    <oreDictNames>
+        <oreDict>thisMightBeBadToEat</oreDict>
+        <oreDict>foodExampleXML</oreDict>
+    </oreDictNames>
+    <effects>
+        <effect amplifier="5" duration="100" chance="1.0">minecraft:speed</effect>
+        <effect amplifier="3" duration="100" chance="0.25">minecraft:weakness</effect>
+    </effects>
+</harvest>
