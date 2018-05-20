@@ -62,7 +62,7 @@ public final class EatenEffect {
             ResourceLocation potionId = new ResourceLocation(json.getAsJsonPrimitive("potion").getAsString());
             int amplifier = json.has("amplifier") ? json.getAsJsonPrimitive("amplifier").getAsInt() : 0;
             int duration = json.has("duration") ? json.getAsJsonPrimitive("duration").getAsInt() : 100;
-            double chance = json.has("chance") ? json.getAsJsonPrimitive("duration").getAsDouble() : 1.0D;
+            double chance = json.has("chance") ? json.getAsJsonPrimitive("chance").getAsDouble() : 1.0D;
 
             return new EatenEffect(potionId, amplifier, duration, chance);
         }
