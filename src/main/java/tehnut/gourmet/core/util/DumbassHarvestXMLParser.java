@@ -32,6 +32,11 @@ public class DumbassHarvestXMLParser extends DefaultHandler {
                 builder = new Harvest.Builder(name, hungerProvided, saturationModifier);
                 return;
             }
+            case "effect": {
+                dataStorage.put("effect_amplifier", Integer.parseInt(attributes.getValue("amplifier")));
+                dataStorage.put("effect_duration", Integer.parseInt(attributes.getValue("duration")));
+                dataStorage.put("effect_chance", Double.parseDouble(attributes.getValue("chance")));
+            }
         }
 
         available = qName;
@@ -132,20 +137,8 @@ public class DumbassHarvestXMLParser extends DefaultHandler {
                 break;
             }
             // Effects
-            case "potion": {
+            case "effect": {
                 dataStorage.put("effect_potion", new ResourceLocation(value));
-                break;
-            }
-            case "amplifier": {
-                dataStorage.put("effect_amplifier", Integer.parseInt(value));
-                break;
-            }
-            case "duration": {
-                dataStorage.put("effect_duration", Integer.parseInt(value));
-                break;
-            }
-            case "chance": {
-                dataStorage.put("effect_chance", Double.parseDouble(value));
                 break;
             }
         }
