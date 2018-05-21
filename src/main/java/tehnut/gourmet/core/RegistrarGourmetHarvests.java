@@ -22,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class RegistrarGourmetHarvests {
 
@@ -36,42 +37,17 @@ public class RegistrarGourmetHarvests {
     };
 
     @HarvestLoader
-    public static final IHarvestLoader JSON_LOADER = harvests -> {
-        File harvestDir = new File(Loader.instance().getConfigDir(), Gourmet.MODID + "/harvest");
-        if (!harvestDir.exists()) {
-            harvestDir.mkdirs();
-            return;
-        }
-
-        File[] jsonFiles = harvestDir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
-        if (jsonFiles == null)
-            return;
-
-        for (File file : jsonFiles)
-            harvests.accept(JsonUtil.fromJson(TypeToken.get(Harvest.class), file));
-    };
+    public static final IHarvestLoader JSON_LOADER = harvests -> parseFiles(".json", f -> harvests.accept(JsonUtil.fromJson(TypeToken.get(Harvest.class), f)));
 
     @HarvestLoader
-    public static final IHarvestLoader XML_LOADER = harvests -> {
-        File harvestDir = new File(Loader.instance().getConfigDir(), Gourmet.MODID + "/harvest");
-        if (!harvestDir.exists()) {
-            harvestDir.mkdirs();
-            return;
+    public static final IHarvestLoader XML_LOADER = harvests -> parseFiles(".xml", f -> {
+        try {
+            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+            parser.parse(f, new DumbassHarvestXMLParser(harvests));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        File[] xmlFiles = harvestDir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".xml"));
-        if (xmlFiles == null)
-            return;
-
-        for (File file : xmlFiles) {
-            try {
-                SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-                parser.parse(file, new DumbassHarvestXMLParser(harvests));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
+    });
 
     @HarvestLoader
     public static final IHarvestLoader REMOTE_LOADER = harvests -> {
@@ -89,4 +65,19 @@ public class RegistrarGourmetHarvests {
             GourmetLog.FOOD_LOADER.error("Error loading remote harvests: {}", e.getMessage());
         }
     };
+
+    private static void parseFiles(String suffix, Consumer<File> handler) {
+        File harvestDir = new File(Loader.instance().getConfigDir(), Gourmet.MODID + "/harvest");
+        if (!harvestDir.exists()) {
+            harvestDir.mkdirs();
+            return;
+        }
+
+        File[] files = harvestDir.listFiles((FileFilter) FileFilterUtils.suffixFileFilter(suffix));
+        if (files == null)
+            return;
+
+        for (File file : files)
+            handler.accept(file);
+    }
 }
