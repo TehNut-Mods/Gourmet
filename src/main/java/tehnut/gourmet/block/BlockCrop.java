@@ -46,7 +46,7 @@ public class BlockCrop extends BlockCrops implements IHarvestContainer {
             return;
 
         float growthChance = getGrowthChance(this, world, pos);
-        if (ForgeHooks.onCropsGrowPre(world, pos, state, rand.nextInt((int)(25.0F / growthChance) + 1) == 0)) {
+        if (ForgeHooks.onCropsGrowPre(world, pos, state, rand.nextInt((int) (25.0F / growthChance) + 1) == 0)) {
             world.setBlockState(pos, state.cycleProperty(getAgeProperty()));
             ForgeHooks.onCropsGrowPost(world, pos, state, state.cycleProperty(getAgeProperty()));
         }
@@ -55,7 +55,7 @@ public class BlockCrop extends BlockCrops implements IHarvestContainer {
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         int age = getAge(state);
-        Random rand = world instanceof World ? ((World)world).rand : new Random();
+        Random rand = world instanceof World ? ((World) world).rand : new Random();
 
         if (age >= getMaxAge()) {
             for (int i = 0; i < harvest.getCropGrowth().getMaxSeedDrop() + fortune; ++i)
@@ -110,7 +110,7 @@ public class BlockCrop extends BlockCrops implements IHarvestContainer {
     protected final BlockStateContainer createBlockState() {
         return new BlockStateContainer.Builder(this).add(AGE).build();
     }
-    
+
     @Override
     public Harvest getHarvest() {
         return harvest;

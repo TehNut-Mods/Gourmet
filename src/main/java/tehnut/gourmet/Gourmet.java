@@ -30,6 +30,7 @@ public class Gourmet {
     public static final List<IHarvestLoader> HARVEST_LOADERS = Lists.newArrayList();
     public static final CreativeTabs TAB_GOURMET = new CreativeTabs(MODID) {
         private Item display = Items.WHEAT;
+
         @Override
         public ItemStack getTabIconItem() {
             if (display == Items.WHEAT)

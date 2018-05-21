@@ -82,7 +82,7 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
             return;
 
         if (!isMature(state)) {
-            if(rand.nextFloat() >= 0.85)
+            if (rand.nextFloat() >= 0.85)
                 world.setBlockState(pos, state.cycleProperty(AGE));
         } else if (!isTasty(state) && rand.nextFloat() >= 0.95F) {
             world.setBlockState(pos, state.withProperty(AGE, 4));
@@ -92,11 +92,16 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         switch (state.getValue(AGE)) {
-            case 0: return AGE_0_AABB;
-            case 1: return AGE_1_AABB;
-            case 2: return AGE_2_AABB;
-            case 3: return FULL_BLOCK_AABB;
-            case 4: return FULL_BLOCK_AABB;
+            case 0:
+                return AGE_0_AABB;
+            case 1:
+                return AGE_1_AABB;
+            case 2:
+                return AGE_2_AABB;
+            case 3:
+                return FULL_BLOCK_AABB;
+            case 4:
+                return FULL_BLOCK_AABB;
         }
         return super.getBoundingBox(state, source, pos);
     }

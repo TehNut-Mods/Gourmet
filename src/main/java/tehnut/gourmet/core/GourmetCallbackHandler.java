@@ -66,7 +66,7 @@ public class GourmetCallbackHandler {
         ITEM_ADD_WRAPPER.getPostCallback().run();
     }
 
-    public static <T extends IForgeRegistryEntry<T>> ActionResult<Harvest> isHarvestOverride(IForgeRegistryEntry<T> newObject, IForgeRegistryEntry<T> oldObject) {
+    public static <T extends IForgeRegistryEntry<T>> ActionResult<Harvest> isHarvestOverride(T newObject, T oldObject) {
         if (oldObject == null)
             return ActionResult.newResult(EnumActionResult.FAIL, null); // not overriding shit
 

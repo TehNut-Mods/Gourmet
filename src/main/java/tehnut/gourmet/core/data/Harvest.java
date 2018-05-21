@@ -114,12 +114,12 @@ public final class Harvest {
         private final int hungerProvided;
         private final float saturationModifier;
         private final String simpleName;
+        private final Set<String> oreDictionaryNames = Sets.newHashSet();
+        private final Set<EatenEffect> effects = Sets.newHashSet();
         private GrowthType growthType = GrowthType.NONE;
         private ConsumeStyle consumptionStyle = ConsumeStyle.EAT;
         private boolean alwaysEdible = false;
         private int timeToEat = 32;
-        private final Set<String> oreDictionaryNames = Sets.newHashSet();
-        private final Set<EatenEffect> effects = Sets.newHashSet();
         private CropGrowth cropGrowth;
         private BushGrowth bushGrowth;
 
@@ -193,14 +193,15 @@ public final class Harvest {
             String simpleName = json.getAsJsonPrimitive("name").getAsString();
             int hungerProvided = json.getAsJsonPrimitive("hungerProvided").getAsInt();
             float saturationModifier = json.getAsJsonPrimitive("saturationModifier").getAsFloat();
-            
+
             Builder builder = new Builder(simpleName, hungerProvided, saturationModifier);
-            
+
             if (json.has("growthType"))
                 builder.setGrowthType(GrowthType.valueOf(json.getAsJsonPrimitive("growthType").getAsString()));
-            
+
             switch (builder.growthType) {
-                case NONE: break;
+                case NONE:
+                    break;
                 case CROP: {
                     if (!json.has("cropGrowth")) {
                         builder.setCropGrowth(CropGrowth.DEFAULT);
@@ -218,16 +219,16 @@ public final class Harvest {
                     builder.setBushGrowth(context.deserialize(json.get("bushGrowth"), BushGrowth.class));
                 }
             }
-            
+
             if (json.has("consumptionStyle"))
                 builder.setConsumptionStyle(ConsumeStyle.valueOf(json.getAsJsonPrimitive("consumptionStyle").getAsString()));
-            
+
             if (json.has("alwaysEdible") && json.getAsJsonPrimitive("alwaysEdible").getAsBoolean())
                 builder.setAlwaysEdible();
-            
+
             if (json.has("timeToEat"))
                 builder.setTimeToEat(json.getAsJsonPrimitive("timeToEat").getAsInt());
-            
+
             if (json.has("oreDictionaryNames"))
                 builder.addOreDictionaryNames(context.deserialize(json.get("oreDictionaryNames"), String[].class));
 
@@ -246,7 +247,8 @@ public final class Harvest {
 
             json.addProperty("growthType", src.growthType.name());
             switch (src.growthType) {
-                case NONE: break;
+                case NONE:
+                    break;
                 case CROP: {
                     if (src.cropGrowth != CropGrowth.DEFAULT)
                         json.add("cropGrowth", context.serialize(src.cropGrowth));

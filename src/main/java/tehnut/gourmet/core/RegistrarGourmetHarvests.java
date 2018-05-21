@@ -10,9 +10,9 @@ import tehnut.gourmet.Gourmet;
 import tehnut.gourmet.core.data.*;
 import tehnut.gourmet.core.util.DumbassHarvestXMLParser;
 import tehnut.gourmet.core.util.GourmetLog;
+import tehnut.gourmet.core.util.JsonUtil;
 import tehnut.gourmet.core.util.loader.HarvestLoader;
 import tehnut.gourmet.core.util.loader.IHarvestLoader;
-import tehnut.gourmet.core.util.JsonUtil;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
