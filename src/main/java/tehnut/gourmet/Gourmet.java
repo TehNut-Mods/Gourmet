@@ -2,15 +2,11 @@ package tehnut.gourmet;
 
 import com.google.common.collect.Lists;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import tehnut.gourmet.core.GourmetCallbackHandler;
 import tehnut.gourmet.core.RegistrarGourmet;
 import tehnut.gourmet.core.util.GourmetLog;
@@ -29,13 +25,9 @@ public class Gourmet {
     public static final boolean DEV_MODE = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
     public static final List<IHarvestLoader> HARVEST_LOADERS = Lists.newArrayList();
     public static final CreativeTabs TAB_GOURMET = new CreativeTabs(MODID) {
-        private Item display = Items.WHEAT;
-
         @Override
         public ItemStack getTabIconItem() {
-            if (display == Items.WHEAT)
-                display = ForgeRegistries.ITEMS.getValue(new ResourceLocation(MODID, "food_sliced_bread"));
-            return new ItemStack(display);
+            return new ItemStack(RegistrarGourmet.CUTTING_BOARD);
         }
     };
 

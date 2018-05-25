@@ -13,15 +13,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.items.ItemHandlerHelper;
 import tehnut.gourmet.Gourmet;
+import tehnut.gourmet.core.RegistrarGourmet;
 import tehnut.gourmet.core.data.Harvest;
 import tehnut.gourmet.core.util.IHarvestContainer;
 
@@ -51,10 +50,7 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (isTasty(state) && !world.isRemote) {
-            if (berryItem == null)
-                berryItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(Gourmet.MODID, "food_" + harvest.getSimpleName()));
-
-            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(berryItem, Math.max(1, world.rand.nextInt(harvest.getBushGrowth().getMaxProduceDrop() + 1))));
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(getItem(), Math.max(1, world.rand.nextInt(harvest.getBushGrowth().getMaxProduceDrop() + 1))));
             world.setBlockState(pos, state.withProperty(AGE, 3));
             return true;
         }
@@ -66,7 +62,7 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         drops.add(new ItemStack(this));
         if (isTasty(state))
-            drops.add(new ItemStack(berryItem, Math.max(1, RANDOM.nextInt(harvest.getBushGrowth().getMaxProduceDrop() + 1))));
+            drops.add(new ItemStack(getItem(), Math.max(1, RANDOM.nextInt(harvest.getBushGrowth().getMaxProduceDrop() + 1))));
     }
 
     @Override
@@ -146,6 +142,10 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
 
     public boolean isTasty(IBlockState state) {
         return state.getValue(AGE) == 4;
+    }
+
+    public Item getItem() {
+        return berryItem == null ? berryItem = RegistrarGourmet.getEdibles().get(harvest) : berryItem;
     }
 
     @Override

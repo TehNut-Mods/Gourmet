@@ -87,18 +87,12 @@ public class BlockCrop extends BlockCrops implements IHarvestContainer {
 
     @Override
     protected Item getSeed() {
-        if (seed == null)
-            seed = RegistrarGourmet.getSeeds().get(harvest);
-
-        return seed;
+        return seed == null ? seed = RegistrarGourmet.getSeeds().get(harvest) : seed;
     }
 
     @Override
     protected Item getCrop() {
-        if (produce == null)
-            produce = RegistrarGourmet.getEdibles().get(harvest);
-
-        return produce;
+        return produce == null ? produce = RegistrarGourmet.getEdibles().get(harvest) : produce;
     }
 
     @Override
