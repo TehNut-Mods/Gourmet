@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 
 public class RegistrarGourmetHarvests {
 
-    @HarvestLoader
+    @HarvestLoader("bultin")
     public static final IHarvestLoader BUILTIN = harvests -> {
         harvests.accept(new Harvest.Builder("sliced_bread", 1, 0.2F).build());
         harvests.accept(new Harvest.Builder("toast", 2, 0.8F).build());
@@ -36,10 +36,10 @@ public class RegistrarGourmetHarvests {
         harvests.accept(new Harvest.Builder("jam_blueberry", 5, 0.2F).setConsumptionStyle(ConsumeStyle.DRINK).addEffect(new EatenEffect(MobEffects.SPEED, 0, 100, 1.0D)).setAlwaysEdible().build());
     };
 
-    @HarvestLoader
+    @HarvestLoader("json")
     public static final IHarvestLoader JSON_LOADER = harvests -> parseFiles(".json", f -> harvests.accept(JsonUtil.fromJson(TypeToken.get(Harvest.class), f)));
 
-    @HarvestLoader
+    @HarvestLoader("xml")
     public static final IHarvestLoader XML_LOADER = harvests -> parseFiles(".xml", f -> {
         try {
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
@@ -49,7 +49,7 @@ public class RegistrarGourmetHarvests {
         }
     });
 
-    @HarvestLoader
+    @HarvestLoader("remote")
     public static final IHarvestLoader REMOTE_LOADER = harvests -> {
         if (Strings.isNullOrEmpty(GourmetConfig.remote.remoteJson))
             return;

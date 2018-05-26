@@ -11,7 +11,7 @@ import tehnut.gourmet.core.GourmetCallbackHandler;
 import tehnut.gourmet.core.RegistrarGourmet;
 import tehnut.gourmet.core.util.GourmetLog;
 import tehnut.gourmet.core.util.loader.HarvestLoader;
-import tehnut.gourmet.core.util.loader.IHarvestLoader;
+import tehnut.gourmet.core.util.loader.HarvestLoaderWrapper;
 import tehnut.gourmet.proxy.IProxy;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class Gourmet {
     public static final String NAME = "Gourmet";
     public static final String VERSION = "@VERSION@";
     public static final boolean DEV_MODE = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
-    public static final List<IHarvestLoader> HARVEST_LOADERS = Lists.newArrayList();
+    public static final List<HarvestLoaderWrapper> HARVEST_LOADERS = Lists.newArrayList();
     public static final CreativeTabs TAB_GOURMET = new CreativeTabs(MODID) {
         @Override
         public ItemStack getTabIconItem() {
@@ -51,8 +51,10 @@ public class Gourmet {
         PROXY.preInit();
 
         HARVEST_LOADERS.addAll(HarvestLoader.Gather.gather(event.getAsmData()));
-        for (IHarvestLoader loader : HARVEST_LOADERS)
-            loader.gatherHarvests(RegistrarGourmet.getHarvestInfo()::add);
+        for (HarvestLoaderWrapper loader : HARVEST_LOADERS) {
+            GourmetLog.FOOD_LOADER.info("Loading harvests from {}", loader);
+            loader.getLoader().gatherHarvests(RegistrarGourmet.getHarvestInfo()::add);
+        }
     }
 
     @Mod.EventHandler

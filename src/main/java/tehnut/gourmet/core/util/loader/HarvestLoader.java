@@ -14,45 +14,48 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
 public @interface HarvestLoader {
 
-    String value() default "";
+    String value();
+
+    String requiredMod() default "";
 
     class Gather {
-        public static List<IHarvestLoader> gather(ASMDataTable dataTable) {
+        public static List<HarvestLoaderWrapper> gather(ASMDataTable dataTable) {
             Stopwatch stopwatch = Stopwatch.createStarted();
-            List<IHarvestLoader> loaders = Lists.newArrayList();
+            List<HarvestLoaderWrapper> loaders = Lists.newArrayList();
             List<ASMDataTable.ASMData> discoveredLoaders = Lists.newArrayList(dataTable.getAll(HarvestLoader.class.getName()));
             discoveredLoaders.sort((o1, o2) -> o1.getObjectName().compareToIgnoreCase(o2.getClassName()));
 
             for (ASMDataTable.ASMData data : discoveredLoaders) {
-                String required = (String) data.getAnnotationInfo().getOrDefault("value", "");
+                String name = (String) data.getAnnotationInfo().get("value");
+                String required = (String) data.getAnnotationInfo().getOrDefault("requiredMod", "");
                 if (!required.isEmpty() && !Loader.isModLoaded(required))
                     continue;
 
                 try {
                     Class<?> asmClass = Class.forName(data.getClassName());
                     if (data.getObjectName().equals(data.getClassName()))
-                        handleClassAnnotation(loaders::add, asmClass);
+                        loaders.add(new HarvestLoaderWrapper(name, fromClass(asmClass)));
                     else
-                        handleFieldAnnotation(loaders::add, asmClass, data.getObjectName());
+                        loaders.add(new HarvestLoaderWrapper(name, fromField(asmClass, data.getObjectName())));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
+            loaders.sort((o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
             GourmetLog.FOOD_LOADER.info("Discovered {} harvest loader(s) in {}", loaders.size(), stopwatch.stop());
             return loaders;
         }
 
-        private static void handleClassAnnotation(Consumer<IHarvestLoader> loaders, Class<?> asmClass) throws Exception {
+        private static IHarvestLoader fromClass(Class<?> asmClass) throws Exception {
             if (!IHarvestLoader.class.isAssignableFrom(asmClass)) {
                 GourmetLog.FOOD_LOADER.error("Class at {} was annotated with @HarvestLoader but does not inherit from IHarvestLoader.", asmClass.getName());
-                return;
+                return null;
             }
 
             Class<? extends IHarvestLoader> loaderClass = asmClass.asSubclass(IHarvestLoader.class);
@@ -62,27 +65,27 @@ public @interface HarvestLoader {
                 loaderConstructor = loaderClass.getConstructor();
             } catch (NoSuchMethodException e) {
                 GourmetLog.FOOD_LOADER.error("Class at {} was annotated with @HarvestLoader but does not provide a default constructor.", asmClass.getName());
-                return;
+                return null;
             }
 
             GourmetLog.FOOD_LOADER.info("Discovered a Harvest loader at {}", asmClass.getName());
-            loaders.accept(loaderConstructor.newInstance());
+            return loaderConstructor.newInstance();
         }
 
-        private static void handleFieldAnnotation(Consumer<IHarvestLoader> loaders, Class<?> asmClass, String fieldName) throws Exception {
+        private static IHarvestLoader fromField(Class<?> asmClass, String fieldName) throws Exception {
             Field potentialLoader = asmClass.getDeclaredField(fieldName);
             if (!Modifier.isStatic(potentialLoader.getModifiers())) {
                 GourmetLog.FOOD_LOADER.error("Field at {}.{} was annotated with @HarvestLoader but is not static.", asmClass.getName(), fieldName);
-                return;
+                return null;
             }
 
             if (potentialLoader.getType() != IHarvestLoader.class) {
                 GourmetLog.FOOD_LOADER.error("Field at {}.{} was annotated with @HarvestLoader but is not an IHarvestLoader.", asmClass.getName(), fieldName);
-                return;
+                return null;
             }
 
             GourmetLog.FOOD_LOADER.info("Discovered a Harvest loader at {}.{}", asmClass.getName(), fieldName);
-            loaders.accept((IHarvestLoader) potentialLoader.get(null));
+            return (IHarvestLoader) potentialLoader.get(null);
         }
     }
 }
