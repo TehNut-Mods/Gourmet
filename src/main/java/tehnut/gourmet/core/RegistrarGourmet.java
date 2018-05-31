@@ -110,7 +110,7 @@ public class RegistrarGourmet {
         GourmetCallbackHandler.handlePostCallback();
 
         List<SmeltingLoader.SmeltingRecipe> smeltingRecipes = Lists.newArrayList();
-        SmeltingLoader.gatherRecipes(smeltingRecipes);
+        SmeltingLoader.gatherRecipes(smeltingRecipes::add);
         for (SmeltingLoader.SmeltingRecipe recipe : smeltingRecipes)
             GameRegistry.addSmelting(recipe.getInput(), recipe.getOutput(), recipe.getExperience());
     }

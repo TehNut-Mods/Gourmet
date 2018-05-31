@@ -13,17 +13,17 @@ import org.apache.commons.io.IOUtils;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class SmeltingLoader {
 
-    public static void gatherRecipes(List<SmeltingRecipe> recipes) {
+    public static void gatherRecipes(Consumer<SmeltingRecipe> smelting) {
         Set<Path> jsons = ResourceUtil.gatherResources("/assets/gourmet", "smelting", p -> FilenameUtils.getExtension(p.toFile().getName()).equals("json"));
         for (Path recipeJson : jsons) {
             try {
                 String json = IOUtils.toString(Files.newBufferedReader(recipeJson));
-                recipes.add(JsonUtil.fromJson(TypeToken.get(SmeltingRecipe.class), json));
+                smelting.accept(JsonUtil.fromJson(TypeToken.get(SmeltingRecipe.class), json));
             } catch (Exception e) {
                 GourmetLog.DEFAULT.error("Error loading smelting recipe at {}", recipeJson);
             }
