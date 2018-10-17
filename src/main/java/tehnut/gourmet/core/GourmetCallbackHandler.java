@@ -70,7 +70,7 @@ public class GourmetCallbackHandler {
         if (oldObject == null)
             return ActionResult.newResult(EnumActionResult.FAIL, null); // not overriding shit
 
-        if (!newObject.getRegistryName().getResourceDomain().equals(Gourmet.MODID))
+        if (!newObject.getRegistryName().getNamespace().equals(Gourmet.MODID))
             return ActionResult.newResult(EnumActionResult.FAIL, null); // our shit is safe
 
         if (!newObject.getRegistryName().equals(oldObject.getRegistryName()))

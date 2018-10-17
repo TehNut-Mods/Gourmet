@@ -70,11 +70,19 @@ public class BlockCrop extends BlockCrops implements IHarvestContainer {
         }
     }
 
+    /*  For the future me:
+     *  This is first called before we can create our custom blockstate with the correct property, so we have to dummy out
+     *  to the default age property to avoid crashes.
+     */
     @Override
     protected PropertyInteger getAgeProperty() {
         return realBlockState == null ? super.getAgeProperty() : age;
     }
 
+    /*  For the future me:
+     *  This is first called before we can create our custom blockstate with the correct properties, so we have to dummy
+     *  out to the default blockstate to avoid crashes.
+     */
     @Override
     public BlockStateContainer getBlockState() {
         return realBlockState == null ? super.getBlockState() : realBlockState;

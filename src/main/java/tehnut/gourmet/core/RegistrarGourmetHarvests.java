@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 
 public class RegistrarGourmetHarvests {
 
-    @HarvestLoader("bultin")
+    @HarvestLoader("builtin")
     public static final IHarvestLoader BUILTIN = harvests -> {
         harvests.accept(new Harvest.Builder("sliced_bread", 1, 0.2F).build());
         harvests.accept(new Harvest.Builder("toast", 2, 0.8F).build());

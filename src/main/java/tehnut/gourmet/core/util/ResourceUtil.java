@@ -63,7 +63,7 @@ public class ResourceUtil {
 
     @Nonnull
     public static ResourceLocation addContext(ResourceLocation rl, String context) {
-        return new ResourceLocation(rl.getResourceDomain(), context + rl.getResourcePath());
+        return new ResourceLocation(rl.getNamespace(), context + rl.getPath());
     }
 
     @SideOnly(Side.CLIENT)

@@ -3,6 +3,7 @@ itemGroup.gourmet=Gourmet
 
 # Items
 item.gourmet.cutting_board.name=Cutting Board
+item.gourmet.skillet.name=Skillet
 item.gourmet.empty_jar.name=Empty Jar
 
 item.gourmet.food_sliced_bread.name=Sliced Bread

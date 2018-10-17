@@ -35,7 +35,7 @@ public class ItemEdible extends ItemFood implements IHarvestContainer {
 
         this.harvest = harvest;
 
-        setUnlocalizedName(Gourmet.MODID + ".food_" + harvest.getSimpleName());
+        setTranslationKey(Gourmet.MODID + ":food_" + harvest.getSimpleName());
         setCreativeTab(Gourmet.TAB_GOURMET);
     }
 

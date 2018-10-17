@@ -17,13 +17,13 @@ public enum GourmetLog {
     DEBUG() {
         @Override
         boolean enabled() {
-            return GourmetConfig.logging.enableDebugLogging;
+            return GourmetConfig.logging.enableDebugLogging || Gourmet.DEV_MODE;
         }
     },
     FOOD_LOADER() {
         @Override
         boolean enabled() {
-            return GourmetConfig.logging.enableFoodLoaderLogging;
+            return GourmetConfig.logging.enableFoodLoaderLogging || Gourmet.DEV_MODE;
         }
     },
     ;

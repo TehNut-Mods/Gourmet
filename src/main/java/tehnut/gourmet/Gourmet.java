@@ -26,7 +26,7 @@ public class Gourmet {
     public static final List<HarvestLoaderWrapper> HARVEST_LOADERS = Lists.newArrayList();
     public static final CreativeTabs TAB_GOURMET = new CreativeTabs(MODID) {
         @Override
-        public ItemStack getTabIconItem() {
+        public ItemStack createIcon() {
             return new ItemStack(RegistrarGourmet.CUTTING_BOARD);
         }
     };
@@ -53,7 +53,7 @@ public class Gourmet {
         HARVEST_LOADERS.addAll(HarvestLoader.Gather.gather(event.getAsmData()));
         for (HarvestLoaderWrapper loader : HARVEST_LOADERS) {
             GourmetLog.FOOD_LOADER.info("Loading harvests from {}", loader);
-            loader.getLoader().gatherHarvests(RegistrarGourmet.getHarvestInfo()::add);
+            loader.getLoader().gatherHarvests(RegistrarGourmet::addHarvest);
         }
     }
 

@@ -29,6 +29,7 @@ import tehnut.gourmet.item.ItemEdible;
 import tehnut.gourmet.item.ItemMundane;
 import tehnut.gourmet.item.ItemSeed;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +39,14 @@ import java.util.Map;
 public class RegistrarGourmet {
 
     private static final List<Harvest> HARVEST_INFO = Lists.newArrayList();
+    private static final Map<String, Harvest> HARVEST_BY_NAME = Maps.newHashMap();
     private static final Map<Harvest, BlockCrop> CROPS = Maps.newHashMap();
     private static final Map<Harvest, BlockBerryBush> BERRY_BUSHES = Maps.newHashMap();
     private static final Map<Harvest, ItemEdible> EDIBLES = Maps.newHashMap();
     private static final Map<Harvest, ItemSeed> SEEDS = Maps.newHashMap();
 
     public static final Item CUTTING_BOARD = Items.AIR;
+    public static final Item SKILLET = Items.AIR;
     public static final Item EMPTY_JAR = Items.AIR;
 
     @SubscribeEvent
@@ -100,6 +103,7 @@ public class RegistrarGourmet {
         }
 
         event.getRegistry().register(new ItemMundane.CraftingReturned("cutting_board").setRegistryName("cutting_board"));
+        event.getRegistry().register(new ItemMundane.CraftingReturned("skillet").setRegistryName("skillet"));
         event.getRegistry().register(new ItemMundane("empty_jar").setRegistryName("empty_jar"));
 
         GourmetLog.DEBUG.info("Item registry completed in {}", stopwatch.stop());
@@ -107,17 +111,22 @@ public class RegistrarGourmet {
 
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+        Stopwatch stopwatch = Stopwatch.createStarted();
         GourmetCallbackHandler.handlePostCallback();
 
         List<SmeltingLoader.SmeltingRecipe> smeltingRecipes = Lists.newArrayList();
         SmeltingLoader.gatherRecipes(smeltingRecipes::add);
         for (SmeltingLoader.SmeltingRecipe recipe : smeltingRecipes)
             GameRegistry.addSmelting(recipe.getInput(), recipe.getOutput(), recipe.getExperience());
+
+        GourmetLog.DEBUG.info("Recipe registry completed in {}", stopwatch.stop());
     }
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
+        Stopwatch stopwatch = Stopwatch.createStarted();
+
         for (ItemFood food : EDIBLES.values())
             ModelLoader.setCustomModelResourceLocation(food, 0, new ModelResourceLocation(ResourceUtil.addContext(food.getRegistryName(), "food/"), "inventory"));
 
@@ -128,10 +137,23 @@ public class RegistrarGourmet {
             ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(bush), 0, new ModelResourceLocation(bush.getRegistryName(), "age=4"));
 
         ModelLoader.setCustomModelResourceLocation(CUTTING_BOARD, 0, new ModelResourceLocation(ResourceUtil.addContext(CUTTING_BOARD.getRegistryName(), "utensil/"), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(SKILLET, 0, new ModelResourceLocation(ResourceUtil.addContext(SKILLET.getRegistryName(), "utensil/"), "inventory"));
         ModelLoader.setCustomModelResourceLocation(EMPTY_JAR, 0, new ModelResourceLocation(ResourceUtil.addContext(EMPTY_JAR.getRegistryName(), "utensil/"), "inventory"));
+
+        GourmetLog.DEBUG.info("Model registry completed in {}", stopwatch.stop());
     }
 
-    public static List<Harvest> getHarvestInfo() {
+    public static void addHarvest(Harvest harvest) {
+        HARVEST_INFO.add(harvest);
+        HARVEST_BY_NAME.put(harvest.getSimpleName(), harvest);
+    }
+
+    @Nullable
+    public static Harvest getByName(String name) {
+        return HARVEST_BY_NAME.get(name);
+    }
+
+    public static List<Harvest> getHarvests() {
         return HARVEST_INFO;
     }
 

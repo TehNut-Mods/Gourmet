@@ -7,7 +7,7 @@ import tehnut.gourmet.Gourmet;
 public class ItemMundane extends Item {
 
     public ItemMundane(String name) {
-        setUnlocalizedName(Gourmet.MODID + "." + name);
+        setTranslationKey(Gourmet.MODID + ":" + name);
         setCreativeTab(Gourmet.TAB_GOURMET);
     }
 
@@ -15,6 +15,8 @@ public class ItemMundane extends Item {
 
         public CraftingReturned(String name) {
             super(name);
+
+            setMaxStackSize(1);
         }
 
         @Override
