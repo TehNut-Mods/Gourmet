@@ -35,6 +35,7 @@ public class RegistrarGourmet {
     private static final Map<Harvest, BlockBerryBush> BERRY_BUSHES = Maps.newHashMap();
     private static final Map<Harvest, ItemEdible> EDIBLES = Maps.newHashMap();
     private static final Map<Harvest, ItemSeed> SEEDS = Maps.newHashMap();
+    private static final Map<Integer, IntegerProperty> AGE_PROP_CACHE = Maps.newHashMap();
 
     public static final Item CUTTING_BOARD = new ItemMundane.CraftingReturned();
     public static final Item SKILLET = new ItemMundane.CraftingReturned();
@@ -50,7 +51,7 @@ public class RegistrarGourmet {
                     BlockCrop crop = new BlockCrop(harvest) {
                         @Override
                         public IntegerProperty getAgeProperty() {
-                            return harvest.getCropGrowth().getStages().getProperty();
+                            return AGE_PROP_CACHE.computeIfAbsent(harvest.getCropGrowth().getStages(), i -> IntegerProperty.create("age", 0, harvest.getCropGrowth().getStages()));
                         }
                     };
                     CROPS.put(harvest, crop);

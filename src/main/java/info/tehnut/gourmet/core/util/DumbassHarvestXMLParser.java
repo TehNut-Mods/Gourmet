@@ -52,7 +52,7 @@ public class DumbassHarvestXMLParser extends DefaultHandler {
             case "cropGrowth": {
                 int maxProduceDrop = (int) dataStorage.get("growth_maxProduceDrop");
                 int maxSeedDrop = (int) dataStorage.get("growth_maxSeedDrop");
-                CropGrowth.Stages stages = (CropGrowth.Stages) dataStorage.get("growth_stages");
+                int stages = (int) dataStorage.get("growth_stages");
                 boolean canFertilize = (boolean) dataStorage.get("growth_fertilize");
                 int minLight = (int) dataStorage.get("growth_minLight");
                 int maxLight = (int) dataStorage.getOrDefault("growth_maxLight", 15);
@@ -101,7 +101,7 @@ public class DumbassHarvestXMLParser extends DefaultHandler {
                 break;
             }
             case "stages": {
-                dataStorage.put("growth_stages", CropGrowth.Stages.valueOf(value));
+                dataStorage.put("growth_stages", Integer.parseInt(value));
                 break;
             }
             case "canFertilize": {
