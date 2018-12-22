@@ -1,4 +1,4 @@
-Copyright (c) 2017 Nicholas "TehNut" Ignoffo
+Copyright (c) 2018 Nicholas "TehNut" Ignoffo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

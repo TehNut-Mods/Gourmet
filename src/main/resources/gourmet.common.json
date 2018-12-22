@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "info.tehnut.gourmet.core.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "gourmet-refmap.json",
+  "mixins": [
+    "MixinMinecraftServer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

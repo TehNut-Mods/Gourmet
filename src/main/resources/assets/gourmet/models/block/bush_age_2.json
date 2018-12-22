@@ -1,0 +1,22 @@
+{
+	"textures": {
+		"leaves": "gourmet:block/bush/bush_base",
+		"particle": "gourmet:block/bush/bush_base"
+	},
+	"elements": [
+		{
+			"name": "cube",
+			"from": [2, 0, 2],
+			"to": [14, 13, 14],
+			"shade": true,
+			"faces": {
+				"north": {"uv": [0, 0, 12, 13], "texture": "#leaves"},
+				"east": {"uv": [0, 0, 12, 13], "texture": "#leaves"},
+				"south": {"uv": [0, 0, 12, 13], "texture": "#leaves"},
+				"west": {"uv": [0, 0, 12, 13], "texture": "#leaves"},
+				"up": {"uv": [0, 0, 12, 12], "texture": "#leaves"},
+				"down": {"uv": [0, 0, 12, 12], "texture": "#leaves"}
+			}
+		}
+	]
+}

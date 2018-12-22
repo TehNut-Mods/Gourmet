@@ -1,0 +1,19 @@
+{
+  "id": "gourmet",
+  "version": "1.0.0",
+  "name": "Gourmet",
+  "description": "A modern take on a large scale food mod.",
+  "side": "universal",
+  "license": "MIT",
+  "authors": [
+    "TehNut"
+  ],
+  "requires": {
+    "fabric": "*"
+  },
+  "mixins": {
+    "client": "gourmet.client.json",
+    "common": "gourmet.common.json"
+  },
+  "initializer": "info.tehnut.gourmet.Gourmet"
+}

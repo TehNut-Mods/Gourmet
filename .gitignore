@@ -1,23 +1,16 @@
-# General use .gitignore for Minecraft modding.
+# gradle
 
-# Folders
-/.gradle/*
-/.idea/*
-/build/*
-/eclipse/*
-/run/*
-/out/*
-/asm/*
-/bin/*
+.gradle/
+build/
+out/
 
-# File Extensions
-*.psd
+# idea
+
+.idea/
 *.iml
 *.ipr
 *.iws
-*.classpath
-*.project
-*.zip
 
-# Specific files
-Thumbs.db
+# fabric
+
+run/

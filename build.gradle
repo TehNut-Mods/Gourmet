@@ -1,87 +1,32 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url "http://files.minecraftforge.net/maven" }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
-}
-
 plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
-    id "com.matthewprenger.cursegradle" version "1.1.0"
+	id "fabric-loom" version "0.1.0-SNAPSHOT"
+    id "com.matthewprenger.cursegradle" version "1.1.2"
     id "maven-publish"
 }
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 def build_number = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'CUSTOM'
-def username = project.hasProperty('dev_username') ? "${dev_username}" : "${mod_name}"
 
 group = package_group
 archivesBaseName = mod_name
-version = "${mc_version}-${mod_version}-${build_number}"
+version = "${mc_version}-fabric-${mod_version}-${build_number}"
 
-repositories {
-    maven { url "http://dvs1.progwml6.com/files/maven" }
-    maven { url "http://tehnut.info/maven/" }
+minecraft {
+    refmapName = mod_name.toLowerCase() + '-refmap.json'
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:${jei_version}:api"
-    runtime "mezz.jei:jei_1.12.2:${jei_version}"
-    deobfCompile "mcp.mobius.waila:Hwyla:${waila_version}:api"
-    runtime "mcp.mobius.waila:Hwyla:${waila_version}"
+	minecraft "com.mojang:minecraft:${snapshot_version}"
+	mappings "net.fabricmc:yarn:${snapshot_version}.${mappings_version}"
+	modCompile "net.fabricmc:fabric-loader:${loader_version}"
+	modCompile "net.fabricmc:fabric:${api_version}"
 }
 
-minecraft {
-    version = "${mc_version}-${forge_version}"
-    runDir = "run"
-
-    replace "@VERSION@", project.version
-    replaceIn "Gourmet.java"
-
-    clientRunArgs += "--username=${username}"
-
-    if (project.hasProperty('mappings_version'))
-        mappings = project.mappings_version
-}
-
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include '**/*.info'
-        include '**/*.properties'
-
-        expand 'version': project.version, 'mcversion': project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.info'
-        exclude '**/*.properties'
-    }
-}
-
-allprojects {
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-    }
-}
-
-jar {
-    classifier = ''
-    manifest.mainAttributes(
-            "Built-By": System.getProperty('user.name'),
-            "Created-By": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
-            "Implementation-Title": project.name,
-            "Implementation-Version": project.version
-    )
-}
-
-tasks.withType(JavaCompile) { task ->
-    task.options.encoding = 'UTF-8'
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
 }
 
 publishing {
@@ -89,7 +34,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
-            artifact sourceJar
+            artifact sourcesJar
         }
     }
     repositories {
@@ -129,7 +74,7 @@ String getChangelogText() {
 }
 
 def curseRelations = {
-    optionalLibrary 'hwyla'
+    requiredLibrary 'fabric'
 }
 
 curseforge {
@@ -139,10 +84,10 @@ curseforge {
     project {
         id = "${curse_id}"
         changelog = getChangelogText()
-        releaseType = 'alpha'
+        releaseType = 'beta'
 
         relations curseRelations
 
-        addArtifact sourceJar
+        addArtifact sourcesJar
     }
 }

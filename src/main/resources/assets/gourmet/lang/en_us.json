@@ -1,0 +1,20 @@
+{
+  "itemGroup.gourmet": "Gourmet",
+
+  "item.gourmet.cutting_board": "Cutting Board",
+  "item.gourmet.skillet": "Skillet",
+  "item.gourmet.empty_jar": "Empty Jar",
+
+  "item.gourmet.food_sliced_bread": "Sliced Bread",
+  "item.gourmet.food_toast": "Toast",
+  "item.gourmet.food_strawberry": "Strawberry",
+  "item.gourmet.food_blueberry": "Blueberry",
+  "item.gourmet.food_jam_strawberry": "Strawberry Jam",
+  "item.gourmet.food_jam_blueberry": "Blueberry Jam",
+
+  "block.gourmet.bush_strawberry": "Strawberry Bush",
+  "block.gourmet.bush_blueberry": "Blueberry Bush",
+
+  "tooltip.gourmet.effect": "%s (%s)",
+  "tooltip.gourmet.effect_with_chance": "%s (%s) (%s)"
+}

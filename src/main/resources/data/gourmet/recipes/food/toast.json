@@ -1,0 +1,9 @@
+{
+  "type": "smelting",
+  "ingredient": {
+    "item": "gourmet:food_sliced_bread"
+  },
+  "result": "gourmet:food_toast",
+  "experience": 0.15,
+  "cookingtime": 200
+}

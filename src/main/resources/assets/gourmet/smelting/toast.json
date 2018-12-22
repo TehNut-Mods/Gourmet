@@ -1,9 +1,0 @@
-{
-  "input": {
-    "item": "gourmet:food_sliced_bread"
-  },
-  "output": {
-    "item": "gourmet:food_toast"
-  },
-  "experience": 0.5
-}

@@ -1,0 +1,6 @@
+{
+    "parent": "gourmet:block/bush_tasty",
+	"textures": {
+		"berry": "gourmet:block/bush/bush_blueberry"
+	}
+}

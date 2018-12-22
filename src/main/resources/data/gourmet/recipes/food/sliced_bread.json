@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shapeless",
+  "group": "gourmet_cutting",
+  "ingredients": [
+    {
+      "item": "minecraft:bread"
+    },
+    {
+      "item": "gourmet:cutting_board"
+    }
+  ],
+  "result": {
+    "item": "gourmet:food_sliced_bread",
+    "count": 4
+  }
+}

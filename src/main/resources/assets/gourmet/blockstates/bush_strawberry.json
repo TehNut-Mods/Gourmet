@@ -1,9 +1,9 @@
 {
   "variants": {
-    "age=0":  { "model": "gourmet:bush/bush_age_0" },
-    "age=1":  { "model": "gourmet:bush/bush_age_1" },
-    "age=2":  { "model": "gourmet:bush/bush_age_2" },
-    "age=3":  { "model": "gourmet:bush/bush_age_3" },
-    "age=4":  { "model": "gourmet:bush/bush_strawberry" }
+    "age=0":  { "model": "gourmet:block/bush_age_0" },
+    "age=1":  { "model": "gourmet:block/bush_age_1" },
+    "age=2":  { "model": "gourmet:block/bush_age_2" },
+    "age=3":  { "model": "gourmet:block/bush_age_3" },
+    "age=4":  { "model": "gourmet:block/bush_strawberry" }
   }
 }
