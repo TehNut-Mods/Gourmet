@@ -1,0 +1,18 @@
+[
+  {
+    "id": "builtin",
+    "initializer": "info.tehnut.gourmet.core.RegistrarGourmetHarvests$HarvestLoaderInternal"
+  },
+  {
+    "id": "json",
+    "initializer": "info.tehnut.gourmet.core.RegistrarGourmetHarvests$HarvestLoaderJson"
+  },
+  {
+    "id": "xml",
+    "initializer": "info.tehnut.gourmet.core.RegistrarGourmetHarvests$HarvestLoaderXml"
+  },
+  {
+    "id": "remote",
+    "initializer": "info.tehnut.gourmet.core.RegistrarGourmetHarvests$HarvestLoaderRemote"
+  }
+]

@@ -6,11 +6,9 @@ import info.tehnut.gourmet.core.data.*;
 import info.tehnut.gourmet.core.util.DumbassHarvestXMLParser;
 import info.tehnut.gourmet.core.util.GourmetLog;
 import info.tehnut.gourmet.core.util.JsonUtil;
-import info.tehnut.gourmet.core.util.loader.HarvestLoader;
 import info.tehnut.gourmet.core.util.loader.IHarvestLoader;
 import joptsimple.internal.Strings;
 import net.fabricmc.loader.FabricLoader;
-import net.minecraft.entity.effect.StatusEffects;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
@@ -26,45 +24,52 @@ import java.util.function.Consumer;
 
 public class RegistrarGourmetHarvests {
 
-    @HarvestLoader("builtin")
-    public static final IHarvestLoader BUILTIN = harvests -> {
-        harvests.accept(new Harvest.Builder("sliced_bread", 1, 0.2F).build());
-        harvests.accept(new Harvest.Builder("toast", 2, 0.8F).build());
-        harvests.accept(new Harvest.Builder("strawberry", 1, 0.1F).setGrowthType(GrowthType.BUSH).setBushGrowth(BushGrowth.DEFAULT).setAlwaysEdible().build());
-        harvests.accept(new Harvest.Builder("blueberry", 1, 0.1F).setGrowthType(GrowthType.BUSH).setBushGrowth(BushGrowth.DEFAULT).setAlwaysEdible().build());
-        harvests.accept(new Harvest.Builder("jam_strawberry", 5, 0.2F).setConsumptionStyle(ConsumeStyle.DRINK).addEffect(new EatenEffect(StatusEffects.SPEED, 0, 100, 1.0D)).setAlwaysEdible().build());
-        harvests.accept(new Harvest.Builder("jam_blueberry", 5, 0.2F).setConsumptionStyle(ConsumeStyle.DRINK).addEffect(new EatenEffect(StatusEffects.SPEED, 0, 100, 1.0D)).setAlwaysEdible().build());
-    };
+    public static class HarvestLoaderInternal implements IHarvestLoader {
+        @Override
+        public void gatherHarvests(Consumer<Harvest> harvests) {
 
-    @HarvestLoader("json")
-    public static final IHarvestLoader JSON_LOADER = harvests -> parseFiles(".json", f -> harvests.accept(JsonUtil.fromJson(TypeToken.get(Harvest.class), f)));
-
-    @HarvestLoader("xml")
-    public static final IHarvestLoader XML_LOADER = harvests -> parseFiles(".xml", f -> {
-        try {
-            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-            parser.parse(f, new DumbassHarvestXMLParser(harvests));
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-    });
+    }
 
-    @HarvestLoader("remote")
-    public static final IHarvestLoader REMOTE_LOADER = harvests -> {
-        if (Strings.isNullOrEmpty(Gourmet.CONFIG.getRemote().getRemoteJson()))
-            return;
-
-        GourmetLog.DEFAULT.info("Attempting remote connection to {}", Gourmet.CONFIG.getRemote().getRemoteJson());
-        try {
-            HttpURLConnection urlConnection = (HttpURLConnection) new URL(Gourmet.CONFIG.getRemote().getRemoteJson()).openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setRequestProperty("user-agent", "Gourmet Minecraft Mod");
-            String response = IOUtils.toString(urlConnection.getInputStream(), StandardCharsets.UTF_8);
-            JsonUtil.fromJson(new TypeToken<List<Harvest>>(){}, response).forEach(harvests);
-        } catch (Exception e) {
-            GourmetLog.FOOD_LOADER.error("Error loading remote harvests: {}", e.getMessage());
+    public static class HarvestLoaderJson implements IHarvestLoader {
+        @Override
+        public void gatherHarvests(Consumer<Harvest> harvests) {
+            parseFiles(".json", f -> harvests.accept(JsonUtil.fromJson(TypeToken.get(Harvest.class), f)));
         }
-    };
+    }
+
+    public static class HarvestLoaderXml implements IHarvestLoader {
+        @Override
+        public void gatherHarvests(Consumer<Harvest> harvests) {
+            parseFiles(".xml", f -> {
+                try {
+                    SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+                    parser.parse(f, new DumbassHarvestXMLParser(harvests));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+
+    public static class HarvestLoaderRemote implements IHarvestLoader {
+        @Override
+        public void gatherHarvests(Consumer<Harvest> harvests) {
+            if (Strings.isNullOrEmpty(Gourmet.CONFIG.getRemote().getRemoteJson()))
+                return;
+
+            GourmetLog.DEFAULT.info("Attempting remote connection to {}", Gourmet.CONFIG.getRemote().getRemoteJson());
+            try {
+                HttpURLConnection urlConnection = (HttpURLConnection) new URL(Gourmet.CONFIG.getRemote().getRemoteJson()).openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestProperty("user-agent", "Gourmet Minecraft Mod");
+                String response = IOUtils.toString(urlConnection.getInputStream(), StandardCharsets.UTF_8);
+                JsonUtil.fromJson(new TypeToken<List<Harvest>>(){}, response).forEach(harvests);
+            } catch (Exception e) {
+                GourmetLog.FOOD_LOADER.error("Error loading remote harvests: {}", e.getMessage());
+            }
+        }
+    }
 
     private static void parseFiles(String suffix, Consumer<File> handler) {
         File harvestDir = new File(FabricLoader.INSTANCE.getConfigDirectory(), Gourmet.MODID + "/harvest");

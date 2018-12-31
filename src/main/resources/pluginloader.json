@@ -1,0 +1,4 @@
+{
+  "id": "gourmet",
+  "initializer": "info.tehnut.gourmet.GourmetPlugins"
+}
