@@ -7,7 +7,7 @@ import tehnut.gourmet.Gourmet;
 public class ItemMundane extends Item {
 
     public ItemMundane(String name) {
-        setTranslationKey(Gourmet.MODID + ":" + name);
+        setTranslationKey(Gourmet.MODID + "." + name);
         setCreativeTab(Gourmet.TAB_GOURMET);
     }
 

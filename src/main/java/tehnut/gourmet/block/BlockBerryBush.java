@@ -42,7 +42,7 @@ public class BlockBerryBush extends BlockBush implements IHarvestContainer {
         this.harvest = harvest;
 
         setCreativeTab(Gourmet.TAB_GOURMET);
-        setTranslationKey(Gourmet.MODID + ":bush_" + harvest.getSimpleName());
+        setTranslationKey(Gourmet.MODID + ".bush_" + harvest.getSimpleName());
         setDefaultState(getBlockState().getBaseState().withProperty(AGE, 0));
         setSoundType(SoundType.PLANT);
     }
