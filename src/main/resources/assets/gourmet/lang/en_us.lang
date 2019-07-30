@@ -10,9 +10,12 @@ item.gourmet.food_sliced_bread.name=Sliced Bread
 item.gourmet.food_toast.name=Toast
 item.gourmet.food_jam_strawberry.name=Strawberry Jam
 item.gourmet.food_jam_blueberry.name=Blueberry Jam
+item.gourmet.food_strawberry.name=Strawberry
+item.gourmet.food_blueberry.name=Blueberry
 
 # Blocks
-
+tile.gourmet.bush_strawberry.name=Strawberry Bush
+tile.gourmet.bush_blueberry.name=Blueberry Bush
 
 # Tooltip
 tooltip.gourmet.effect=%s (%s)

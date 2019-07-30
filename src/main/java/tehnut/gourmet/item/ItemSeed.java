@@ -26,7 +26,7 @@ public class ItemSeed extends Item implements IPlantable, IHarvestContainer {
     public ItemSeed(Harvest harvest) {
         this.harvest = harvest;
 
-        setTranslationKey(Gourmet.MODID + ":seed_" + harvest.getSimpleName());
+        setTranslationKey(Gourmet.MODID + ".seed_" + harvest.getSimpleName());
         setCreativeTab(Gourmet.TAB_GOURMET);
     }
 
