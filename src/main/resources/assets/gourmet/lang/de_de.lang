@@ -1,0 +1,18 @@
+# Creative Tab
+itemGroup.gourmet=Gourmet
+
+# Items
+item.gourmet.cutting_board.name=Küchenbrett
+item.gourmet.empty_jar.name=Leeres Glas
+
+item.gourmet.food_sliced_bread.name=Schnittbrot
+item.gourmet.food_toast.name=Toast
+item.gourmet.food_jam_strawberry.name=Erdbeermarmelade
+item.gourmet.food_jam_blueberry.name=Blaubeermarmelade
+
+# Blocks
+
+
+# Tooltip
+tooltip.gourmet.effect=%s (%s)
+tooltip.gourmet.effect.withchance=%s (%s) (%s)
